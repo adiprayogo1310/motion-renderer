@@ -223,7 +223,7 @@ function render(t){
     E.s1.style.opacity=1;
     const p=seg(t,1,6.2), d=Math.floor(7192*Math.pow(p,1.7));
     $('depth').textContent=d.toLocaleString('id-ID');
-    $('rptr').setAttribute('transform',`translate(0,${p*500})`);
+    $('rptr').setAttribute('transform',`translate(0,${(d/7192)*500})`);
     $('boat').setAttribute('transform',`translate(0,${Math.sin(t*2.2)*7}) rotate(${Math.sin(t*1.7)*3} 360 380)`);
     $('waves1a').setAttribute('transform',`translate(${-waveShift},0)`);
     $('waves1b').setAttribute('transform',`translate(${-waveShift2+40},0)`);
