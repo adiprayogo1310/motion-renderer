@@ -2,6 +2,6 @@ node_modules/
 out/
 *.png
 qa/
-qa-report.md
+
 tmp/
 __pycache__/
