@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Satu Password — Semua Akun</title>
+<style>
+  :root{
+    --bg:#0a0a0a; --fg:#e8e8e8; --dim:#6a6a6a; --red:#ff3b30; --grn:#30d158;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:100%;height:100%;background:var(--bg);overflow:hidden;
+    font-family:'JetBrains Mono',ui-monospace,'DejaVu Sans Mono',Menlo,monospace}
+  #stage{position:relative;width:1280px;height:720px;background:var(--bg);overflow:hidden}
+  #grid{position:absolute;inset:-60px;
+    background-image:linear-gradient(#161616 1px,transparent 1px),
+                     linear-gradient(90deg,#161616 1px,transparent 1px);
+    background-size:80px 80px}
+  .lyr{position:absolute;inset:0}
+  .big{color:var(--fg);font-weight:700;letter-spacing:-.02em}
+  .dim{color:var(--dim)}
+  .red{color:var(--red)} .grn{color:var(--grn)}
+  .hidden{opacity:0}
+  #scan{position:absolute;left:0;width:100%;height:2px;background:var(--red);opacity:.35;box-shadow:0 0 18px 4px rgba(255,59,48,.45)}
+  .tag{position:absolute;top:48px;left:64px;color:var(--dim);font-size:20px;letter-spacing:.35em}
+  .tag b{color:var(--fg);font-weight:400}
+  /* scene 1 */
+  #s1 .line{position:absolute;left:64px;font-size:96px;line-height:1.12;white-space:pre}
+  #caret{display:inline-block;width:.55em;height:.9em;background:var(--fg);vertical-align:-.08em}
+  /* scene 2 */
+  #pwbox{position:absolute;width:300px;padding:22px 26px;border:2px solid var(--fg);background:#0f0f0f}
+  #pwbox .lbl{font-size:16px;color:var(--dim);letter-spacing:.25em;margin-bottom:12px}
+  #pwbox .dots{font-size:34px;letter-spacing:.28em;color:var(--fg)}
+  .acct{position:absolute;width:210px;padding:16px 18px;border:1px solid #3a3a3a;background:#101010;font-size:20px;color:var(--fg)}
+  .acct small{display:block;font-size:13px;color:var(--dim);margin-top:4px;letter-spacing:.15em}
+  .breach{border-color:var(--red)!important;color:var(--red)!important;box-shadow:0 0 24px rgba(255,59,48,.35) inset}
+  /* scene 3 */
+  #s3 .k{position:absolute;top:96px;left:0;width:100%;text-align:center;font-size:26px;letter-spacing:.5em;color:var(--dim)}
+  #count{position:absolute;top:250px;left:0;width:100%;text-align:center;font-size:150px;font-weight:700;color:var(--fg);font-variant-numeric:tabular-nums}
+  #s3 .sub{position:absolute;top:460px;left:0;width:100%;text-align:center;font-size:30px;color:var(--red);letter-spacing:.2em}
+  #s3 .keys{position:absolute;top:560px;left:0;width:100%;text-align:center;font-size:22px;color:#3f3f3f;letter-spacing:.6em}
+  /* scene 4 */
+  .fix{position:absolute;width:520px;padding:26px 30px;border:1px solid #2c2c2c;background:#0e0e0e}
+  .fix .num{font-size:18px;color:var(--grn)}
+  .fix h3{font-size:34px;color:var(--fg);margin:8px 0 6px;font-weight:700}
+  .fix p{font-size:18px;color:var(--dim);line-height:1.45}
+  /* scene 5 */
+  #s5 .big{position:absolute;left:0;width:100%;text-align:center;font-size:84px;line-height:1.25}
+  #sig{position:absolute;bottom:56px;left:0;width:100%;text-align:center;font-size:16px;color:var(--dim);letter-spacing:.4em}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="grid"></div>
+  <div id="scan" class="hidden"></div>
+
+  <div class="lyr" id="s1">
+    <div class="tag">[ EDUKASI KEAMANAN ] <b>01/05</b></div>
+    <div class="line big" id="l1" style="top:200px"></div>
+    <div class="line big" id="l2" style="top:330px"></div>
+    <div class="line dim" id="l3" style="top:470px;font-size:30px"></div>
+  </div>
+
+  <div class="lyr hidden" id="s2">
+    <div class="tag">[ BAHAYA ] <b>02/05</b></div>
+    <div id="pwbox"><div class="lbl">PASSWORD KAMU</div><div class="dots">••••••••</div></div>
+    <div class="acct" id="a1">Email<small>mail.com</small></div>
+    <div class="acct" id="a2">Bank<small>banking.co.id</small></div>
+    <div class="acct" id="a3">Media sosial<small>sosial.app</small></div>
+    <div class="acct" id="a4">Belanja<small>shop.id</small></div>
+    <div class="acct" id="a5">Kantor<small>perusahaan</small></div>
+  </div>
+
+  <div class="lyr hidden" id="s3">
+    <div class="tag">[ ANGKA ] <b>03/05</b></div>
+    <div class="k">PERCOBAAN OTOMATIS / "CREDENTIAL STUFFING"</div>
+    <div id="count">0</div>
+    <div class="sub" id="s3sub"></div>
+    <div class="keys" id="keys"></div>
+  </div>
+
+  <div class="lyr hidden" id="s4">
+    <div class="tag">[ SOLUSI ] <b>04/05</b></div>
+    <div class="fix" id="f1"><div class="num">01</div><h3>Password beda tiap akun</h3><p>Satu bocor, sisanya aman.</p></div>
+    <div class="fix" id="f2"><div class="num">02</div><h3>Password manager</h3><p>Tidak perlu menghafal — generator + vault terenkripsi.</p></div>
+    <div class="fix" id="f3"><div class="num">03</div><h3>Dua faktor (2FA)</h3><p>Kode kedua di ponselmu. Satu menit setup, pengaman bertahun-tahun.</p></div>
+  </div>
+
+  <div class="lyr hidden" id="s5">
+    <div class="tag">[ PENUTUP ] <b>05/05</b></div>
+    <div class="big" id="o1" style="top:230px">SATU AKUN.</div>
+    <div class="big" id="o2" style="top:340px">SATU PASSWORD<span class="red">.</span></div>
+    <div class="dim" id="o3" style="position:absolute;top:490px;left:0;width:100%;text-align:center;font-size:26px">akunmu, tanggung jawabmu</div>
+    <div id="sig">EDUKASI KEAMANAN — 2026</div>
+  </div>
+</div>
+<script>
+const W=1280,H=720,DUR=40;
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const ease=t=>t<0?0:t>1?1:t*t*(3-2*t);           // smoothstep
+const pop=t=>t<0?0:t>1?1:1-Math.pow(1-t,3);       // ease-out cubic
+const seg=(t,a,b)=>clamp((t-a)/(b-a),0,1);
+const $=id=>document.getElementById(id);
+const E={s1:$('s1'),s2:$('s2'),s3:$('s3'),s4:$('s4'),s5:$('s5'),grid:$('grid'),scan:$('scan')};
+
+// scene2 geometry (password source + 5 targets)
+const PW={x:110,y:290};
+const AC=[{x:520,y:80},{x:850,y:180},{x:560,y:330},{x:880,y:450},{x:520,y:580}];
+
+function typeText(el,full,p){ // typewriter with cursor
+  const n=Math.round(full.length*seg(p,0,.8));
+  el.innerHTML=full.slice(0,n).replace(/</g,'&lt;')+(p<1&&n<full.length?'<span id="caret"></span>':'');
+}
+function blink(t){return (Math.floor(t*2)%2)?1:.15}
+
+function render(t){
+  // background: grid always drifting; subtle per-scene tint
+  E.grid.style.transform=`translate(${-(t*12)%80}px,${-(t*7)%80}px)`;
+  ['s1','s2','s3','s4','s5'].forEach(k=>E[k].style.opacity=0);
+
+  if(t<6){ // S1 hook: typewriter
+    E.s1.style.opacity=1;
+    const zoom=1+seg(t,0,6)*.04; E.s1.style.transform=`scale(${zoom})`;
+    typeText($('l1'),'SATU PASSWORD.',seg(t,.4,2.2));
+    typeText($('l2'),'SEMUA AKUN.',seg(t,2.6,4.4));
+    if(t>4.8){const p=pop(seg(t,4.8,5.6));$('l3').innerHTML=`<span style="opacity:${p}">praktis — tapi jebakan paling umum di internet</span>`}
+    else $('l3').textContent='';
+  }
+  else if(t<14){ // S2 one breach fans out
+    E.s2.style.opacity=1;
+    const inP=ease(seg(t,6,6.8));
+    E.s2.style.transform=`scale(${lerp(1.08,1,inP)})`;
+    const pb=$('pwbox');const q=pop(seg(t,6.2,7));
+    pb.style.left=(lerp(-340,PW.x,q))+'px';pb.style.top=PW.y+'px';
+    const br=seg(t,9,9.4); // breach flash on source
+    pb.classList.toggle('breach',br>0&&t<12);
+    AC.forEach((c,i)=>{
+      const el=$('a'+(i+1));const q=pop(seg(t,7+i*.35,7.8+i*.35));
+      el.style.left=lerp(W+240,c.x,q)+'px';el.style.top=c.y+'px';el.style.opacity=q;
+      // breach spreads staggered
+      const b=seg(t,9.5+i*.45,9.9+i*.45);
+      el.classList.toggle('breach',b>0);
+      if(b>0&&b<1){ // shake on hit
+        const s=Math.sin((t*40)%(Math.PI*2))*(1-b)*5;
+        el.style.transform=`translate(${s}px,0)`;el.style.top=(c.y+Math.cos(t*50)*3*(1-b))+'px';
+      } else el.style.transform='';
+    });
+  }
+  else if(t<22){ // S3 counter
+    E.s3.style.opacity=1;
+    const p=seg(t,14,21);
+    // exponential-feel counter to ~10,485,760 (2^20-ish), tabular
+    const n=Math.floor(lerp(0,10485760,Math.pow(p,2.6)));
+    $('count').textContent=n.toLocaleString('id-ID');
+    $('count').style.color=t>19?'var(--red)':'var(--fg)';
+    const msgs=[[14,'database bocor diunggah'],[16.5,'daftar email+password dibeli'],[19,'bot mencoba di 500 situs sekaligus']];
+    let m='';msgs.forEach(([s,txt])=>{if(t>s)m=txt});$('s3sub').textContent=m;
+    const keys=$('keys');const chars='▸▯▮▯▸▮▯▸▮▯▸▮';
+    keys.textContent=chars.split('').map((c,i)=>(Math.floor(t*8)+i)%5?'▮':'▸').join(' ');
+    // red scanline sweep
+    E.scan.classList.remove('hidden');
+    E.scan.style.top=(t*180%H)+'px';
+  }
+  else if(t<32){ // S4 fixes slide in with hard cuts
+    E.s4.style.opacity=1;
+    const F=[{el:'f1',y:110},{el:'f2',y:280},{el:'f3',y:450}];
+    F.forEach((f,i)=>{
+      const el=$(f.el);const q=pop(seg(t,22.3+i*1.6,23.1+i*1.6));
+      el.style.left=lerp(-560,64,q)+'px';el.style.opacity=q;
+      el.style.borderColor=t>26+i*.4?'var(--grn)':'#2c2c2c';
+    });
+    // green tint creeps into grid
+    E.grid.style.backgroundImage=
+      `linear-gradient(rgba(48,209,88,${.05*seg(t,24,28)}) 1px,transparent 1px),linear-gradient(90deg,rgba(48,209,88,${.05*seg(t,24,28)}) 1px,transparent 1px)`;
+  }
+  else { // S5 outro stamp
+    E.s5.style.opacity=1;
+    const q=pop(seg(t,32.3,33.2));
+    const slam=1+.35*(1-ease(seg(t,32.3,32.9)));
+    E.s5.style.transform=`scale(${lerp(slam,1,ease(seg(t,32.9,33.6)))})`;
+    $('o1').style.opacity=q;$('o3').style.opacity=pop(seg(t,33.8,34.6));
+    $('o2').style.opacity=q;
+    $('sig').style.opacity=pop(seg(t,34.6,35.4));
+  }
+}
+
+// playback or deterministic seek for CI
+const qp=new URLSearchParams(location.search);
+if(qp.has('t')){ render(parseFloat(qp.get('t'))); }
+else{
+  let t0=performance.now();
+  function loop(now){
+    const t=((now-t0)/1000)%DUR;
+    render(t);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+}
+window.__seek=t=>render(t); // for frame export
+</script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+name: render
+on:
+  workflow_dispatch:
+    inputs:
+      fps:
+        description: 'Frames per second'
+        default: '30'
+      mux_vo:
+        description: 'Mux vo/voiceover audio into MP4 if present'
+        default: 'true'
+      retime:
+        description: 'Stretch timeline to VO duration (true) or keep 40s'
+        default: 'true'
+  push:
+    paths: ['vo/**']
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+
+      - name: Install
+        run: npm i puppeteer --no-fund --no-audit
+
+      - name: Render frames
+        run: node scripts/render.mjs "${{ inputs.fps || '30' }}"
+
+      - name: VO retime + mux
+        id: vo
+        run: |
+          audio=$(ls vo/*.wav vo/*.mp3 vo/*.m4a vo/*.ogg 2>/dev/null | head -1)
+          if [ -z "$audio" ]; then
+            echo "no VO found — silent MP4"
+            ffmpeg -framerate "${{ inputs.fps || '30' }}" -i out/f_%05d.png -c:v libx264 -pix_fmt yuv420p -crf 20 -preset medium out.mp4
+            exit 0
+          fi
+          dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$audio")
+          echo "vo_dur=$dur" >> "$GITHUB_OUTPUT"
+          if [ "${{ inputs.retime }}" = "true" ]; then
+            FPS="${{ inputs.fps || '30' }}"
+            TOTAL=$(python3 -c "print(int($dur*$FPS))")
+            for f in $(seq 0 $((TOTAL-1))); do
+              t=$(python3 -c "print($f/$FPS*$DUR/$dur)" 2>/dev/null || true)
+            done
+            # stretch: video 40s timeline mapped onto VO duration
+            ffmpeg -y -framerate $FPS -i out/f_%05d.png -i "$audio" \
+              -filter_complex "[0:v]setpts=PTS*($dur/40)[v]" \
+              -map "[v]" -map 1:a -c:v libx264 -pix_fmt yuv420p -crf 20 \
+              -c:a aac -shortest out.mp4
+          else
+            ffmpeg -y -framerate "${{ inputs.fps || '30' }}" -i out/f_%05d.png -i "$audio" \
+              -map 0:v -map 1:a -c:v libx264 -pix_fmt yuv420p -crf 20 -c:a aac -shortest out.mp4
+          fi
+
+      - name: Commit MP4
+        run: |
+          git config user.name "actions-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add out.mp4
+          git commit -m "render: MP4 $(date -u +%Y-%m-%dT%H:%M)Z [skip ci]" || echo "nothing changed"
+          git push
