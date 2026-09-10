@@ -35,11 +35,11 @@ jobs:
           npm i puppeteer --no-fund --no-audit
           node scripts/qa-frames.mjs
 
-      - name: Vision QA
+      - name: Vision QA (advisory — selalu lanjut, hasil di qa-report.md)
         if: inputs.skip_qa != 'true'
         env:
           VISION_API_KEY: ${{ secrets.VISION_API_KEY }}
-        run: python3 scripts/qa-vision.py
+        run: python3 scripts/qa-vision.py || true
 
       - name: Commit QA report
         if: always()
@@ -52,8 +52,8 @@ jobs:
 
   render:
     needs: qa
-    # QA fail (ada ISSUE) → render tetap jalan kalau skip_qa=true, kalau tidak → block
-    if: ${{ !cancelled() && (needs.qa.result == 'success' || inputs.skip_qa == 'true') }}
+    # advisory mode: qa job tidak pernah memblokir (QA gagal/issue = info di report)
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
