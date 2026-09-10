@@ -2,184 +2,251 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Satu Password — Semua Akun</title>
+<title>Gunung Terbalik — Palung Jawa</title>
 <style>
   :root{
-    --bg:#0a0a0a; --fg:#e8e8e8; --dim:#6a6a6a; --red:#ff3b30; --grn:#30d158;
+    --paper:#efe7d3; --ink:#1e2a38; --sea:#2b5f8a; --sea2:#3a7ca5;
+    --red:#c0442e; --dim:#8a7f6a; --sand:#c8b78f;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  html,body{width:100%;height:100%;background:var(--bg);overflow:hidden;
-    font-family:'JetBrains Mono',ui-monospace,'DejaVu Sans Mono',Menlo,monospace}
-  #stage{position:relative;width:720px;height:1280px;background:var(--bg);overflow:hidden}
-  #grid{position:absolute;inset:-60px;
-    background-image:linear-gradient(#161616 1px,transparent 1px),
-                     linear-gradient(90deg,#161616 1px,transparent 1px);
-    background-size:80px 80px}
+  html,body{width:100%;height:100%;background:var(--paper);overflow:hidden;
+    font-family:'Liberation Serif','DejaVu Serif',Georgia,serif}
+  #stage{position:relative;width:720px;height:1280px;background:var(--paper);overflow:hidden}
   .lyr{position:absolute;inset:0}
-  .big{color:var(--fg);font-weight:700;letter-spacing:-.02em}
-  .dim{color:var(--dim)}
-  .red{color:var(--red)} .grn{color:var(--grn)}
   .hidden{opacity:0}
-  #scan{position:absolute;left:0;width:100%;height:2px;background:var(--red);opacity:.35;box-shadow:0 0 18px 4px rgba(255,59,48,.45)}
-  .tag{position:absolute;top:40px;left:40px;color:var(--dim);font-size:16px;letter-spacing:.3em}
-  .tag b{color:var(--fg);font-weight:400}
-  /* scene 1 */
-  #s1 .line{position:absolute;left:44px;font-size:64px;line-height:1.15;white-space:pre}
-  #caret{display:inline-block;width:.55em;height:.9em;background:var(--fg);vertical-align:-.08em}
-  /* scene 2 */
-  #pwbox{position:absolute;width:300px;padding:20px 24px;border:2px solid var(--fg);background:#0f0f0f}
-  #pwbox .lbl{font-size:14px;color:var(--dim);letter-spacing:.25em;margin-bottom:10px}
-  #pwbox .dots{font-size:30px;letter-spacing:.28em;color:var(--fg)}
-  .acct{position:absolute;width:220px;padding:14px 16px;border:1px solid #3a3a3a;background:#101010;font-size:18px;color:var(--fg)}
-  .acct small{display:block;font-size:12px;color:var(--dim);margin-top:4px;letter-spacing:.15em}
-  .breach{border-color:var(--red)!important;color:var(--red)!important;box-shadow:0 0 24px rgba(255,59,48,.35) inset}
-  /* scene 3 */
-  #s3 .k{position:absolute;top:280px;left:0;width:100%;text-align:center;font-size:19px;letter-spacing:.3em;color:var(--dim);padding:0 30px}
-  #count{position:absolute;top:460px;left:0;width:100%;text-align:center;font-size:112px;font-weight:700;color:var(--fg);font-variant-numeric:tabular-nums}
-  #s3 .sub{position:absolute;top:680px;left:0;width:100%;text-align:center;font-size:24px;color:var(--red);letter-spacing:.12em}
-  #s3 .keys{position:absolute;top:800px;left:0;width:100%;text-align:center;font-size:20px;color:#3f3f3f;letter-spacing:.5em}
-  /* scene 4 */
-  .fix{position:absolute;width:600px;left:60px;padding:24px 28px;border:1px solid #2c2c2c;background:#0e0e0e}
-  .fix .num{font-size:16px;color:var(--grn)}
-  .fix h3{font-size:30px;color:var(--fg);margin:8px 0 6px;font-weight:700}
-  .fix p{font-size:17px;color:var(--dim);line-height:1.45}
-  /* scene 5 */
-  #s5 .big{position:absolute;left:0;width:100%;text-align:center;font-size:62px;line-height:1.25}
-  #sig{position:absolute;bottom:64px;left:0;width:100%;text-align:center;font-size:13px;color:var(--dim);letter-spacing:.4em}
+  .tag{position:absolute;top:44px;left:40px;color:var(--dim);font-size:17px;letter-spacing:.28em;font-style:italic}
+  .tag b{color:var(--ink);font-weight:400;font-style:normal}
+  .dim{color:var(--dim)} .red{color:var(--red)} .sea{color:var(--sea)}
+  #grat{position:absolute;inset:0;opacity:.5;
+    background-image:linear-gradient(rgba(30,42,56,.12) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(30,42,56,.12) 1px,transparent 1px);
+    background-size:72px 72px}
+  /* S1 */
+  #s1 .hdr{position:absolute;top:150px;left:0;width:100%;text-align:center;font-size:30px;letter-spacing:.45em;color:var(--ink)}
+  #depth{position:absolute;top:560px;left:0;width:100%;text-align:center;font-size:130px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+  #s1 .m{font-size:60px;color:var(--sea)}
+  #depthline{position:absolute;left:0;width:100%;height:2px;background:var(--sea);opacity:.4}
+  #s1 .cap{position:absolute;top:770px;left:0;width:100%;text-align:center;font-size:24px;color:var(--dim);letter-spacing:.2em}
+  /* S2 */
+  #s2 svg{position:absolute;left:0;top:0}
+  .lbl2{font:17px 'Liberation Sans','DejaVu Sans',sans-serif;fill:var(--ink);letter-spacing:.14em}
+  .lbl2s{font:14px 'Liberation Sans','DejaVu Sans',sans-serif;fill:var(--dim);letter-spacing:.1em}
+  #s2 .cap{position:absolute;bottom:90px;left:0;width:100%;text-align:center;font-size:26px;color:var(--ink);font-style:italic}
+  /* S3 */
+  #cm{position:absolute;top:420px;left:0;width:100%;text-align:center;font-size:170px;font-weight:700;color:var(--red);font-variant-numeric:tabular-nums}
+  #cm small{font-size:64px;color:var(--ink)}
+  #s3 .sub{position:absolute;top:650px;left:0;width:100%;text-align:center;font-size:26px;color:var(--dim);letter-spacing:.15em}
+  #yr{position:absolute;top:800px;left:0;width:100%;text-align:center;font-size:64px;color:var(--ink);font-variant-numeric:tabular-nums}
+  #mtr{position:absolute;top:920px;left:0;width:100%;text-align:center;font-size:44px;color:var(--sea)}
+  #s3 .rule{position:absolute;top:580px;left:120px;width:480px;height:2px;background:var(--ink)}
+  /* S4 */
+  #s4 .big{position:absolute;left:0;width:100%;text-align:center;font-size:72px;font-weight:700;color:var(--ink)}
+  #stress{position:absolute;top:600px;left:0;width:100%;text-align:center;font-size:24px;color:var(--dim);letter-spacing:.3em}
+  /* S5 */
+  #s5 svg{position:absolute;left:0;top:170px}
+  #s5 .cap{position:absolute;bottom:110px;left:60px;width:600px;text-align:center;font-size:34px;color:var(--ink);font-style:italic;line-height:1.4}
+  /* S6 */
+  #s6 .big{position:absolute;top:560px;left:0;width:100%;text-align:center;font-size:88px;font-weight:700;color:var(--ink)}
+  #s6 .big span{color:var(--red)}
+  #s6 .sub{position:absolute;top:720px;left:0;width:100%;text-align:center;font-size:26px;color:var(--dim);font-style:italic}
 </style>
 </head>
 <body>
 <div id="stage">
-  <div id="grid"></div>
-  <div id="scan" class="hidden"></div>
+  <div id="grat"></div>
 
   <div class="lyr" id="s1">
-    <div class="tag">[ EDUKASI KEAMANAN ] <b>01/05</b></div>
-    <div class="line big" id="l1" style="top:470px"></div>
-    <div class="line big" id="l2" style="top:580px"></div>
-    <div class="line dim" id="l3" style="top:710px;font-size:25px;width:640px"></div>
+    <div class="tag">[ FAKTA BUMI ] <b>01/06</b></div>
+    <div class="hdr">SELATAN JAWA</div>
+    <div id="depthline"></div>
+    <div id="depth">0<span class="m"> m</span></div>
+    <div class="cap">KEDALAMAN DI BAWAH PERMUKAAN LAUT</div>
   </div>
 
   <div class="lyr hidden" id="s2">
-    <div class="tag">[ BAHAYA ] <b>02/05</b></div>
-    <div id="pwbox"><div class="lbl">PASSWORD KAMU</div><div class="dots">••••••••</div></div>
-    <div class="acct" id="a1">Email<small>mail.com</small></div>
-    <div class="acct" id="a2">Bank<small>banking.co.id</small></div>
-    <div class="acct" id="a3">Media sosial<small>sosial.app</small></div>
-    <div class="acct" id="a4">Belanja<small>shop.id</small></div>
-    <div class="acct" id="a5">Kantor<small>perusahaan</small></div>
+    <div class="tag">[ POTONGAN BUMI ] <b>02/06</b></div>
+    <svg id="svg2" width="720" height="1280" viewBox="0 0 720 1280"></svg>
+    <div class="cap">Palung Jawa — jurang tepat di tepi selatan pulau</div>
   </div>
 
   <div class="lyr hidden" id="s3">
-    <div class="tag">[ ANGKA ] <b>03/05</b></div>
-    <div class="k">PERCOBAAN OTOMATIS — "CREDENTIAL STUFFING"</div>
-    <div id="count">0</div>
-    <div class="sub" id="s3sub"></div>
-    <div class="keys" id="keys"></div>
+    <div class="tag">[ KECEPATAN ] <b>03/06</b></div>
+    <div id="cm">6.5<small> cm</small></div>
+    <div class="rule"></div>
+    <div class="sub">PER TAHUN — LEMPEng MENUNJAM DI BAWAH JAWA</div>
+    <div id="yr">0 tahun</div>
+    <div id="mtr">= 0 meter</div>
   </div>
 
   <div class="lyr hidden" id="s4">
-    <div class="tag">[ SOLUSI ] <b>04/05</b></div>
-    <div class="fix" id="f1"><div class="num">01</div><h3>Password beda tiap akun</h3><p>Satu bocor, sisanya aman.</p></div>
-    <div class="fix" id="f2"><div class="num">02</div><h3>Password manager</h3><p>Tidak perlu menghafal — generator + vault terenkripsi.</p></div>
-    <div class="fix" id="f3"><div class="num">03</div><h3>Dua faktor (2FA)</h3><p>Kode kedua di ponselmu. Satu menit setup, pengaman bertahun-tahun.</p></div>
+    <div class="tag">[ GEMPA ] <b>04/06</b></div>
+    <div class="big" id="b1" style="top:400px;opacity:0">GEMPA BUKAN</div>
+    <div class="big" id="b2" style="top:500px;opacity:0">KEJADIAN<span class="red">.</span></div>
+    <div class="big" id="b3" style="top:660px;opacity:0;color:var(--red)">GERAKAN.</div>
+    <div id="stress">TEKANAN MENUMPUK...</div>
+    <svg id="svg4" width="720" height="1280" viewBox="0 0 720 1280" style="position:absolute;left:0;top:0;pointer-events:none"></svg>
   </div>
 
   <div class="lyr hidden" id="s5">
-    <div class="tag">[ PENUTUP ] <b>05/05</b></div>
-    <div class="big" id="o1" style="top:520px">SATU AKUN.</div>
-    <div class="big" id="o2" style="top:630px">SATU PASSWORD<span class="red">.</span></div>
-    <div class="dim" id="o3" style="position:absolute;top:770px;left:0;width:100%;text-align:center;font-size:22px">akunmu, tanggung jawabmu</div>
-    <div id="sig">EDUKASI KEAMANAN — 2026</div>
+    <div class="tag">[ PETA ] <b>05/06</b></div>
+    <svg id="svg5" width="720" height="820" viewBox="0 0 720 820"></svg>
+    <div class="cap" id="s5cap">Pulau yang kau injak<br>bergerak setiap detik.</div>
+  </div>
+
+  <div class="lyr hidden" id="s6">
+    <div class="tag">[ PENUTUP ] <b>06/06</b></div>
+    <div class="big" id="o1" style="opacity:0">BUMI TIDAK DIAM<span>.</span></div>
+    <div class="sub" id="o2" style="opacity:0">kita yang jarang merasakannya</div>
   </div>
 </div>
 <script>
 const W=720,H=1280,DUR=40;
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const lerp=(a,b,t)=>a+(b-a)*t;
-const ease=t=>t<0?0:t>1?1:t*t*(3-2*t);           // smoothstep
-const pop=t=>t<0?0:t>1?1:1-Math.pow(1-t,3);       // ease-out cubic
+const ease=t=>t<0?0:t>1?1:t*t*(3-2*t);
+const pop=t=>t<0?0:t>1?1:1-Math.pow(1-t,3);
 const seg=(t,a,b)=>clamp((t-a)/(b-a),0,1);
 const $=id=>document.getElementById(id);
-const E={s1:$('s1'),s2:$('s2'),s3:$('s3'),s4:$('s4'),s5:$('s5'),grid:$('grid'),scan:$('scan')};
+const E={s1:$('s1'),s2:$('s2'),s3:$('s3'),s4:$('s4'),s5:$('s5'),s6:$('s6'),grat:$('grat'),stage:$('stage')};
 
-// scene2 geometry (vertical: source top, 5 targets staggered column)
-const PW={x:210,y:180};
-const AC=[{x:120,y:430},{x:390,y:540},{x:105,y:650},{x:385,y:760},{x:150,y:870}];
+// ---- S2 cross-section (static build, animated via JS on svg elements) ----
+const svg2=$('svg2');
+svg2.innerHTML=`
+  <rect x="0" y="240" width="720" height="200" fill="#3a7ca5" opacity="0.85"/>
+  <rect x="0" y="240" width="720" height="200" fill="url(#waves)" opacity="0.25"/>
+  <defs><pattern id="waves" width="80" height="40" patternUnits="userSpaceOnUse">
+    <path d="M0 20 Q20 5 40 20 T80 20" stroke="#efe7d3" stroke-width="2" fill="none" opacity="0.5"/>
+  </pattern></defs>
+  <path id="eur" d="M40 620 L680 560 L680 1000 L40 1000 Z" fill="#b8a276" stroke="#1e2a38" stroke-width="3"/>
+  <path id="ina" d="M40 700 L620 780 L560 880 L40 820 Z" fill="#7a6a52" stroke="#1e2a38" stroke-width="3" transform="translate(0,0)"/>
+  <path d="M40 620 L680 560" stroke="#1e2a38" stroke-width="4" fill="none"/>
+  <path id="trench" d="M150 633 Q340 700 520 640" stroke="#c0442e" stroke-width="5" fill="none" stroke-dasharray="14 10"/>
+  <g id="arrL"><rect x="120" y="905" width="120" height="10" fill="#c0442e"/><path d="M240 895 L270 910 L240 925 Z" fill="#c0442e"/></g>
+  <g id="arrR"><rect x="480" y="955" width="120" height="10" fill="#c0442e"/><path d="M480 945 L450 960 L480 975 Z" fill="#c0442e"/></g>
+  <text class="lbl2" x="90" y="580" fill="#1e2a38">LAUT</text>
+  <text class="lbl2" x="440" y="700">LEMPENG EURASIA</text>
+  <text class="lbl2" x="70" y="880">LEMPENG INDO-AUSTRALIA</text>
+  <text class="lbl2" x="330" y="800" fill="#c0442e">PALUNG JAWA ±7.000 M</text>`;
 
-function typeText(el,full,p){ // typewriter with cursor
-  const n=Math.round(full.length*seg(p,0,.8));
-  el.innerHTML=full.slice(0,n).replace(/</g,'&lt;')+(p<1&&n<full.length?'<span id="caret"></span>':'');
-}
+// ---- S4 waves container ----
+const svg4=$('svg4');
+
+// ---- S5 map ----
+const svg5=$('svg5');
+const PX=lon=>(lon-93)/27*640+40, PY=lat=>(6-lat)/18*700+60;
+const jawa=[[105.1,-5.9],[106.5,-6.0],[108,-6.2],[110,-6.4],[112,-6.7],[114.4,-6.9],[115.5,-7.7],[114.4,-8.2],[110,-8.2],[108,-7.8],[106,-7.4],[104.8,-7.0]];
+const path=jawa.map((p,i)=>(i?'L':'M')+PX(p[0])+' '+PY(p[1])).join(' ')+' Z';
+svg5.innerHTML=`
+  <path d="${path}" fill="#c8b78f" stroke="#1e2a38" stroke-width="3" opacity="0"/>
+  <path id="trench5" d="M${PX(102)} ${PY(-10.1)} Q ${PX(109)} ${PY(-10.9)} ${PX(116)} ${PY(-10.0)}" stroke="#c0442e" stroke-width="4" fill="none" stroke-dasharray="12 9" opacity="0"/>
+  <text class="lbl2s" x="${PX(109.5)}" y="${PY(-11.3)}" fill="#8a7f6a">PALUNG JAWA</text>
+  <text class="lbl2" x="${PX(106.6)}" y="${PY(-6.9)}">PULAU JAWA</text>
+  <g id="quakes"></g>`;
+const QUAKES=[
+  {lon:95.9,lat:3.3,y:2004,m:9.1,n:'ACEH',dx:48,dy:-6},
+  {lon:99.9,lat:-7.9,y:2009,m:7.0,n:'TASIKMALAYA',dx:-4,dy:44},
+  {lon:107.7,lat:-9.4,y:2006,m:7.7,n:'PANGANDARAN',dx:16,dy:-12},
+  {lon:112.6,lat:-10.3,y:1994,m:7.8,n:'BANYUWANGI',dx:-196,dy:-26},
+];
 
 function render(t){
-  // background: grid always drifting
-  E.grid.style.transform=`translate(${-(t*12)%80}px,${-(t*7)%80}px)`;
-  ['s1','s2','s3','s4','s5'].forEach(k=>E[k].style.opacity=0);
+  E.grat.style.transform=`translate(${-(t*6)%72}px,${-(t*4)%72}px)`;
+  ['s1','s2','s3','s4','s5','s6'].forEach(k=>E[k].style.opacity=0);
+  let shake=0;
 
-  if(t<6){ // S1 hook: typewriter
+  if(t<6.5){ // S1 diving depth counter
     E.s1.style.opacity=1;
-    const zoom=1+seg(t,0,6)*.04; E.s1.style.transform=`scale(${zoom})`;
-    typeText($('l1'),'SATU PASSWORD.',seg(t,.4,2.2));
-    typeText($('l2'),'SEMUA AKUN.',seg(t,2.6,4.4));
-    if(t>4.8){const p=pop(seg(t,4.8,5.6));$('l3').innerHTML=`<span style="opacity:${p}">praktis — tapi jebakan paling umum di internet</span>`}
-    else $('l3').textContent='';
+    const p=seg(t,1,6.2);
+    const d=Math.floor(7192*Math.pow(p,1.7));
+    $('depth').innerHTML=d.toLocaleString('id-ID')+'<span class="m"> m</span>';
+    $('depth').style.fontSize=(130-Math.floor(Math.log10(d+1))*6)+'px';
+    // camera sinking: depth lines scroll up
+    $('depthline').style.top=((H-(t*260)%(H*0.9)))+'px';
+    $('depthline').style.opacity=.4*p;
+    // sea darkens with depth
+    const dk=Math.floor(60+40*seg(t,2,6));
+    document.documentElement.style.setProperty('--sea2',`rgb(${43-15*seg(t,2,6)},${95-40*seg(t,2,6)},${138-50*seg(t,2,6)})`);
   }
-  else if(t<14){ // S2 one breach fans out (vertical cascade)
+  else if(t<14){ // S2 cross-section
     E.s2.style.opacity=1;
-    const inP=ease(seg(t,6,6.8));
-    E.s2.style.transform=`scale(${lerp(1.08,1,inP)})`;
-    const pb=$('pwbox');const q=pop(seg(t,6.2,7));
-    pb.style.left=(lerp(-340,PW.x,q))+'px';pb.style.top=PW.y+'px';
-    const br=seg(t,9,9.4); // breach flash on source
-    pb.classList.toggle('breach',br>0&&t<12);
-    AC.forEach((c,i)=>{
-      const el=$('a'+(i+1));const q=pop(seg(t,7+i*.35,7.8+i*.35));
-      el.style.left=lerp(W+240,c.x,q)+'px';el.style.top=c.y+'px';el.style.opacity=q;
-      const b=seg(t,9.5+i*.45,9.9+i*.45);
-      el.classList.toggle('breach',b>0);
-      if(b>0&&b<1){ // shake on hit
-        const s=Math.sin((t*40)%(Math.PI*2))*(1-b)*5;
-        el.style.transform=`translate(${s}px,0)`;el.style.top=(c.y+Math.cos(t*50)*3*(1-b))+'px';
-      } else el.style.transform='';
-    });
+    const inP=ease(seg(t,6.5,7.6));
+    E.s2.style.transform=`scale(${lerp(1.12,1,inP)})`;
+    $('eur').style.opacity=pop(seg(t,6.8,7.4));
+    $('ina').style.opacity=pop(seg(t,7.4,8.0));
+    $('trench').style.opacity=pop(seg(t,9,9.8));
+    // plates creep toward each other forever (slow, constant)
+    const c=Math.sin((t-6.5)*.9)*14+((t-6.5)*10)%40;
+    $('arrL').setAttribute('transform',`translate(${20+((t*22)%30)},0)`);
+    $('arrR').setAttribute('transform',`translate(${-20-((t*22)%30)},0)`);
+    $('ina').setAttribute('transform',`translate(${c*0.6},${c*0.12})`);
   }
-  else if(t<22){ // S3 counter
+  else if(t<22){ // S3 cm/year accumulate
     E.s3.style.opacity=1;
-    const p=seg(t,14,21);
-    const n=Math.floor(lerp(0,10485760,Math.pow(p,2.6)));
-    $('count').textContent=n.toLocaleString('id-ID');
-    $('count').style.color=t>19?'var(--red)':'var(--fg)';
-    const msgs=[[14,'database bocor diunggah'],[16.5,'daftar email+password dibeli'],[19,'bot mencoba di 500 situs sekaligus']];
-    let m='';msgs.forEach(([s,txt])=>{if(t>s)m=txt});$('s3sub').textContent=m;
-    const keys=$('keys');const chars='▸▯▮▯▸▮▯▸▮▯▸▮';
-    keys.textContent=chars.split('').map((c,i)=>(Math.floor(t*8)+i)%5?'▮':'▸').join(' ');
-    E.scan.classList.remove('hidden');
-    E.scan.style.top=(t*180%H)+'px';
+    const q=pop(seg(t,14,14.9));
+    E.s3.style.transform=`scale(${lerp(.9,1,q)})`;
+    const years=Math.floor(100*seg(t,16.2,21.4));
+    $('yr').textContent=years+' tahun';
+    $('mtr').textContent='= '+(6.5*years/100).toFixed(1).replace('.',',')+' meter';
+    $('cm').style.opacity=t>16?.35:1;
   }
-  else if(t<32){ // S4 fixes slide in with hard cuts
+  else if(t<30){ // S4 stress -> snap -> waves
     E.s4.style.opacity=1;
-    const F=[{el:'f1',y:280},{el:'f2',y:580},{el:'f3',y:880}];
-    F.forEach((f,i)=>{
-      const el=$(f.el);const q=pop(seg(t,22.3+i*1.6,23.1+i*1.6));
-      el.style.left=lerp(-660,60,q)+'px';el.style.top=f.y+'px';el.style.opacity=q;
-      el.style.borderColor=t>26+i*.4?'var(--grn)':'#2c2c2c';
-    });
-    E.grid.style.backgroundImage=
-      `linear-gradient(rgba(48,209,88,${.05*seg(t,24,28)}) 1px,transparent 1px),linear-gradient(90deg,rgba(48,209,88,${.05*seg(t,24,28)}) 1px,transparent 1px)`;
+    const st=seg(t,22,26.5);
+    $('stress').textContent='TEKANAN MENUMPUK'+'.'.repeat(1+Math.floor(t*2)%3);
+    $('stress').style.opacity=st;
+    // fault line under stress
+    let sh=st*3.5;
+    svg4.innerHTML=`<line x1="60" y1="760" x2="660" y2="760" stroke="#1e2a38" stroke-width="6"
+      transform="translate(${Math.sin(t*40)*sh},${Math.cos(t*47)*sh*0.5})"/>`;
+    // SNAP at 26.5
+    if(t>26.5){
+      shake=(1-ease(seg(t,26.5,27.4)))*14;
+      $('b1').style.opacity=pop(seg(t,26.8,27.5));
+      $('b2').style.opacity=pop(seg(t,27.1,27.8));
+      $('b3').style.opacity=pop(seg(t,27.6,28.3));
+      // expanding waves from snap point
+      let waves='';
+      for(let i=0;i<4;i++){
+        const wp=seg(t,26.5+i*.35,29.6);
+        if(wp>0&&wp<1){
+          const r=wp*760, op=(1-wp)*.7;
+          waves+=`<circle cx="360" cy="760" r="${r}" stroke="#c0442e" stroke-width="${4*(1-wp)+1}" fill="none" opacity="${op}"/>`;
+        }
+      }
+      svg4.innerHTML+=waves+`<line x1="60" y1="760" x2="330" y2="745" stroke="#1e2a38" stroke-width="6"/><line x1="390" y1="775" x2="660" y2="760" stroke="#1e2a38" stroke-width="6"/>`;
+    }
   }
-  else { // S5 outro slam
+  else if(t<36){ // S5 map with historical quakes
     E.s5.style.opacity=1;
-    const q=pop(seg(t,32.3,33.2));
-    const slam=1+.35*(1-ease(seg(t,32.3,32.9)));
-    E.s5.style.transform=`scale(${lerp(slam,1,ease(seg(t,32.9,33.6)))})`;
-    $('o1').style.opacity=q;$('o3').style.opacity=pop(seg(t,33.8,34.6));
-    $('o2').style.opacity=q;
-    $('sig').style.opacity=pop(seg(t,34.6,35.4));
+    const inP=ease(seg(t,30,31));
+    E.s5.style.transform=`scale(${lerp(1.1,1,inP)})`;
+    const isl=svg5.querySelector('path'), tr=$('trench5');
+    isl.style.opacity=pop(seg(t,30.2,30.9));
+    tr.style.opacity=pop(seg(t,31.1,31.7));
+    let q='';
+    QUAKES.forEach((k,i)=>{
+      const p=pop(seg(t,31.9+i*.55,32.6+i*.55));
+      if(p<=0)return;
+      const r=(8+(k.m-7)*16)*p;
+      q+=`<circle cx="${PX(k.lon)}" cy="${PY(k.lat)}" r="${r}" fill="none" stroke="#c0442e" stroke-width="3.5"/>
+          <circle cx="${PX(k.lon)}" cy="${PY(k.lat)}" r="5" fill="#c0442e"/>
+          <text class="lbl2s" x="${PX(k.lon)+k.dx}" y="${PY(k.lat)+k.dy}" fill="#c0442e">${k.n} ${k.y} M${k.m}</text>`;
+    });
+    $('quakes').innerHTML=q;
   }
+  else{ // S6 outro
+    E.s6.style.opacity=1;
+    const q=pop(seg(t,36.3,37.1));
+    const slam=1+.3*(1-ease(seg(t,36.3,36.9)));
+    E.s6.style.transform=`scale(${lerp(slam,1,ease(seg(t,36.9,37.6)))})`;
+    $('o1').style.opacity=q;
+    $('o2').style.opacity=pop(seg(t,37.8,38.6));
+  }
+
+  // global shake (S4 snap)
+  E.stage.style.transform=shake?`translate(${(Math.random()*2-1)*shake}px,${(Math.random()*2-1)*shake}px)`:'';
 }
 
-// playback or deterministic seek for CI
 const qp=new URLSearchParams(location.search);
 if(qp.has('t')){ render(parseFloat(qp.get('t'))); }
 else{
@@ -191,7 +258,7 @@ else{
   }
   requestAnimationFrame(loop);
 }
-window.__seek=t=>render(t); // for frame export
+window.__seek=t=>render(t);
 </script>
 </body>
 </html>
