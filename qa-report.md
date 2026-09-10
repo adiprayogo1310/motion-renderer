@@ -1,25 +1,25 @@
 # QA Report — vision
 
-Model: bai/glm-5.3-flash
+Model: or/inclusionai/ling-3.0-flash-vl:free
 Frames: 6
-Issues: 2
+Issues: 6
 
 Verdict: **FAIL**
 
 ## qa/frame_03.png
-OK
+[QA-ERROR] HTTP Error 503: Service Unavailable
 
 ## qa/frame_10.png
-ISSUE: Kaption italic "lempeng selatan menunjam ke bawah pulau" menimpa ilustrasi lempeng cokelat, garis tepi lempeng memotong teks, kontras rendah.
+[QA-ERROR] HTTP Error 503: Service Unavailable
 
 ## qa/frame_18.png
-OK
+[QA-ERROR] HTTP Error 503: Service Unavailable
 
 ## qa/frame_25.png
-OK
+[QA-ERROR] HTTP Error 503: Service Unavailable
 
 ## qa/frame_33.png
-OK
+[QA-ERROR] HTTP Error 503: Service Unavailable
 
 ## qa/frame_38.png
-ISSUE: ilustrasi papan selancar — sirung tergambar di atas papan, seharusnya di bawah; tampak janggal dan membingungkan.
+[QA-ERROR] HTTP Error 503: Service Unavailable
