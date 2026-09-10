@@ -8,6 +8,9 @@ on:
       retime:
         description: 'Stretch timeline to VO duration (true) or keep 40s'
         default: 'true'
+      skip_qa:
+        description: 'Skip vision QA (true/false)'
+        default: 'false'
   push:
     paths: ['vo/**']
 
@@ -15,7 +18,42 @@ permissions:
   contents: write
 
 jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+
+      - name: Render QA keyframes
+        run: |
+          npm i puppeteer --no-fund --no-audit
+          node scripts/qa-frames.mjs
+
+      - name: Vision QA
+        if: inputs.skip_qa != 'true'
+        env:
+          VISION_API_KEY: ${{ secrets.VISION_API_KEY }}
+        run: python3 scripts/qa-vision.py
+
+      - name: Commit QA report
+        if: always()
+        run: |
+          git config user.name "actions-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add qa-report.md
+          git commit -m "qa: vision report $(date -u +%Y-%m-%dT%H:%M)Z [skip ci]" || echo "no changes"
+          git push
+
   render:
+    needs: qa
+    # QA fail (ada ISSUE) → render tetap jalan kalau skip_qa=true, kalau tidak → block
+    if: ${{ !cancelled() && (needs.qa.result == 'success' || inputs.skip_qa == 'true') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -33,7 +71,6 @@ jobs:
         run: node scripts/render.mjs "${{ inputs.fps || '30' }}"
 
       - name: VO retime + mux
-        id: vo
         run: |
           audio=$(ls vo/*.wav vo/*.mp3 vo/*.m4a vo/*.ogg 2>/dev/null | head -1)
           if [ -z "$audio" ]; then
@@ -42,7 +79,6 @@ jobs:
             exit 0
           fi
           dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$audio")
-          echo "vo_dur=$dur" >> "$GITHUB_OUTPUT"
           if [ "${{ inputs.retime }}" = "true" ]; then
             # stretch: video 40s timeline mapped onto VO duration
             ffmpeg -y -framerate "${{ inputs.fps || '30' }}" -i out/f_%05d.png -i "$audio" \

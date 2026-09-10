@@ -55,9 +55,9 @@
         <text x="592" y="540" text-anchor="end" font-size="14" class="sans" fill="#8a7f6a">0</text>
         <text x="592" y="1075" text-anchor="end" font-size="14" class="sans" fill="#8a7f6a">7.000m</text>
       </g>
-      <text id="depth" x="280" y="720" font-size="104" font-weight="700" fill="#1e2a38" font-variant-numeric="tabular-nums">0</text>
-      <text x="280" y="780" font-size="30" class="sans" fill="#2b5f8a">meter di bawah laut</text>
-      <text class="cap" x="360" y="1180" text-anchor="middle" font-size="21">dasarnya lebih dalam daripada Semeru tingginya</text>
+      <text id="depth" x="240" y="700" font-size="104" font-weight="700" fill="#ffffff" font-variant-numeric="tabular-nums">0</text>
+      <text x="240" y="760" font-size="30" class="sans" fill="#cfe3f2">meter di bawah laut</text>
+      <text class="cap" x="320" y="1180" text-anchor="middle" font-size="20">dasarnya lebih dalam daripada Semeru tingginya</text>
     </svg>
   </div>
 
@@ -193,7 +193,7 @@ const jawa=[[105.1,-5.9],[106.5,-6.0],[108,-6.2],[110,-6.4],[112,-6.7],[114.4,-6
 const jpath=jawa.map((p,i)=>(i?'L':'M')+PX(p[0])+' '+PY(p[1])).join(' ')+' Z';
 $('map').innerHTML=`
   <path d="M60 320 Q130 460 231 660" stroke="#8a7f6a" stroke-width="3" fill="none" opacity=".5" stroke-dasharray="2 6"/>
-  <text class="sans" x="46" y="304" font-size="16" fill="#8a7f6a" transform="rotate(52 46 304)">sumatra</text>
+  <text class="sans" x="46" y="304" font-size="16" fill="#8a7f6a" letter-spacing="1" transform="rotate(52 46 304)">SUMATRA</text>
   <ellipse cx="660" cy="${PY(-8.5)}" rx="20" ry="9" fill="#c8b78f" stroke="#1e2a38" stroke-width="2"/>
   <ellipse cx="694" cy="${PY(-8.15)}" rx="12" ry="7" fill="#c8b78f" stroke="#1e2a38" stroke-width="2"/>
   <path d="${jpath}" fill="#c8b78f" stroke="#1e2a38" stroke-width="3" id="jawa5" opacity="0"/>
@@ -228,7 +228,7 @@ function render(t){
     $('waves1a').setAttribute('transform',`translate(${-waveShift},0)`);
     $('waves1b').setAttribute('transform',`translate(${-waveShift2+40},0)`);
     $('cloud1').setAttribute('transform',`translate(${(t*10)%720},0)`);
-    $('depth').setAttribute('fill', t>5?'#1d4666':'#1e2a38');
+    $('depth').setAttribute('fill', t>5?'#bfe0f5':'#ffffff');
   }
   else if(t<14){ // S2
     E.s2.style.opacity=1;
