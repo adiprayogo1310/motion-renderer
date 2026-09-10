@@ -6,7 +6,7 @@
 <style>
   :root{
     --paper:#efe7d3; --ink:#1e2a38; --sea:#2b5f8a; --sea2:#3a7ca5;
-    --red:#c0442e; --dim:#8a7f6a; --sand:#c8b78f;
+    --red:#c0442e; --dim:#8a7f6a; --sand:#c8b78f; --rock:#7a6a52; --deep:#1d4666;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{width:100%;height:100%;background:var(--paper);overflow:hidden;
@@ -14,89 +14,150 @@
   #stage{position:relative;width:720px;height:1280px;background:var(--paper);overflow:hidden}
   .lyr{position:absolute;inset:0}
   .hidden{opacity:0}
-  .tag{position:absolute;top:44px;left:40px;color:var(--dim);font-size:17px;letter-spacing:.28em;font-style:italic}
+  .tag{position:absolute;top:40px;left:40px;color:var(--dim);font-size:16px;letter-spacing:.26em;font-style:italic;z-index:5}
   .tag b{color:var(--ink);font-weight:400;font-style:normal}
   .dim{color:var(--dim)} .red{color:var(--red)} .sea{color:var(--sea)}
-  #grat{position:absolute;inset:0;opacity:.5;
-    background-image:linear-gradient(rgba(30,42,56,.12) 1px,transparent 1px),
-                     linear-gradient(90deg,rgba(30,42,56,.12) 1px,transparent 1px);
+  .sans{font-family:'Liberation Sans','DejaVu Sans',Arial,sans-serif}
+  #grat{position:absolute;inset:0;opacity:.45;
+    background-image:linear-gradient(rgba(30,42,56,.10) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(30,42,56,.10) 1px,transparent 1px);
     background-size:72px 72px}
-  /* S1 */
-  #s1 .hdr{position:absolute;top:150px;left:0;width:100%;text-align:center;font-size:30px;letter-spacing:.45em;color:var(--ink)}
-  #depth{position:absolute;top:560px;left:0;width:100%;text-align:center;font-size:130px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
-  #s1 .m{font-size:60px;color:var(--sea)}
-  #depthline{position:absolute;left:0;width:100%;height:2px;background:var(--sea);opacity:.4}
-  #s1 .cap{position:absolute;top:770px;left:0;width:100%;text-align:center;font-size:24px;color:var(--dim);letter-spacing:.2em}
-  /* S2 */
-  #s2 svg{position:absolute;left:0;top:0}
-  .lbl2{font:17px 'Liberation Sans','DejaVu Sans',sans-serif;fill:var(--ink);letter-spacing:.14em}
-  .lbl2s{font:14px 'Liberation Sans','DejaVu Sans',sans-serif;fill:var(--dim);letter-spacing:.1em}
-  #s2 .cap{position:absolute;bottom:90px;left:0;width:100%;text-align:center;font-size:26px;color:var(--ink);font-style:italic}
-  /* S3 */
-  #cm{position:absolute;top:420px;left:0;width:100%;text-align:center;font-size:170px;font-weight:700;color:var(--red);font-variant-numeric:tabular-nums}
-  #cm small{font-size:64px;color:var(--ink)}
-  #s3 .sub{position:absolute;top:650px;left:0;width:100%;text-align:center;font-size:26px;color:var(--dim);letter-spacing:.15em}
-  #yr{position:absolute;top:800px;left:0;width:100%;text-align:center;font-size:64px;color:var(--ink);font-variant-numeric:tabular-nums}
-  #mtr{position:absolute;top:920px;left:0;width:100%;text-align:center;font-size:44px;color:var(--sea)}
-  #s3 .rule{position:absolute;top:580px;left:120px;width:480px;height:2px;background:var(--ink)}
-  /* S4 */
-  #s4 .big{position:absolute;left:0;width:100%;text-align:center;font-size:72px;font-weight:700;color:var(--ink)}
-  #stress{position:absolute;top:600px;left:0;width:100%;text-align:center;font-size:24px;color:var(--dim);letter-spacing:.3em}
-  /* S5 */
-  #s5 svg{position:absolute;left:0;top:170px}
-  #s5 .cap{position:absolute;bottom:110px;left:60px;width:600px;text-align:center;font-size:34px;color:var(--ink);font-style:italic;line-height:1.4}
-  /* S6 */
-  #s6 .big{position:absolute;top:560px;left:0;width:100%;text-align:center;font-size:88px;font-weight:700;color:var(--ink)}
-  #s6 .big span{color:var(--red)}
-  #s6 .sub{position:absolute;top:720px;left:0;width:100%;text-align:center;font-size:26px;color:var(--dim);font-style:italic}
+  svg{display:block}
+  .big{font-weight:700;color:var(--ink)}
+  .cap{position:absolute;font-style:italic;color:var(--ink)}
 </style>
 </head>
 <body>
 <div id="stage">
   <div id="grat"></div>
 
+  <!-- S1: perahu di atas jurang -->
   <div class="lyr" id="s1">
     <div class="tag">[ FAKTA BUMI ] <b>01/06</b></div>
-    <div class="hdr">SELATAN JAWA</div>
-    <div id="depthline"></div>
-    <div id="depth">0<span class="m"> m</span></div>
-    <div class="cap">KEDALAMAN DI BAWAH PERMUKAAN LAUT</div>
+    <svg width="720" height="1280" viewBox="0 0 720 1280" id="svg1">
+      <circle cx="600" cy="180" r="46" fill="#d9a441" opacity=".85"/>
+      <g id="cloud1"><ellipse cx="180" cy="170" rx="52" ry="16" fill="#e2d9c2"/><ellipse cx="230" cy="160" rx="40" ry="13" fill="#e2d9c2"/></g>
+      <text x="360" y="120" text-anchor="middle" font-size="34" letter-spacing="10" class="sans" fill="#1e2a38" font-weight="bold">SELATAN JAWA</text>
+      <!-- boat -->
+      <g id="boat">
+        <path d="M300 388 Q360 410 420 388 L400 372 L320 372 Z" fill="#8a4a2b" stroke="#1e2a38" stroke-width="3"/>
+        <line x1="360" y1="372" x2="360" y2="300" stroke="#1e2a38" stroke-width="4"/>
+        <path d="M364 306 L416 364 L364 364 Z" fill="#efe7d3" stroke="#1e2a38" stroke-width="3"/>
+        <path d="M356 314 L318 364 L356 364 Z" fill="#c0442e" opacity=".85"/>
+      </g>
+      <!-- waves: 3 layers, shifted by JS -->
+      <g id="waves1"></g>
+      <!-- depth gauge ruler -->
+      <g id="ruler">
+        <line x1="600" y1="560" x2="600" y2="1060" stroke="#1e2a38" stroke-width="3"/>
+        <g id="rticks"></g>
+        <path id="rptr" d="M600 560 L580 550 L580 570 Z" fill="#c0442e"/>
+        <text x="592" y="540" text-anchor="end" font-size="14" class="sans" fill="#8a7f6a">0</text>
+        <text x="592" y="1075" text-anchor="end" font-size="14" class="sans" fill="#8a7f6a">7.000m</text>
+      </g>
+      <text id="depth" x="280" y="720" font-size="104" font-weight="700" fill="#1e2a38" font-variant-numeric="tabular-nums">0</text>
+      <text x="280" y="780" font-size="30" class="sans" fill="#2b5f8a">meter di bawah laut</text>
+      <text class="cap" x="360" y="1180" text-anchor="middle" font-size="21">dasarnya lebih dalam daripada Semeru tingginya</text>
+    </svg>
   </div>
 
+  <!-- S2: potongan bumi -->
   <div class="lyr hidden" id="s2">
     <div class="tag">[ POTONGAN BUMI ] <b>02/06</b></div>
-    <svg id="svg2" width="720" height="1280" viewBox="0 0 720 1280"></svg>
-    <div class="cap">Palung Jawa — jurang tepat di tepi selatan pulau</div>
+    <svg width="720" height="1280" viewBox="0 0 720 1280" id="svg2">
+      <rect x="0" y="300" width="720" height="140" fill="#3a7ca5"/>
+      <g id="waves2"></g>
+      <!-- Eurasia plate -->
+      <path d="M0 540 L720 495 L720 790 L0 830 Z" fill="#b8a276" stroke="#1e2a38" stroke-width="4"/>
+      <!-- strata -->
+      <path d="M0 640 L720 600 L720 640 L0 685 Z" fill="#a08a60" opacity=".7"/>
+      <path d="M0 730 L720 695 L720 725 L0 762 Z" fill="#8a744e" opacity=".6"/>
+      <!-- Indo-Australia slab diving -->
+      <path d="M0 880 L520 850 L640 940 L540 1130 L0 1030 Z" fill="#7a6a52" stroke="#1e2a38" stroke-width="4"/>
+      <path d="M0 960 L470 935 L560 1000 L480 1090 L0 1000 Z" fill="#665540" opacity=".7"/>
+      <!-- trench notch + dashed marker -->
+      <path d="M340 845 Q360 880 380 842" stroke="#1e2a38" stroke-width="4" fill="none"/>
+      <path d="M300 852 Q360 900 430 848" stroke="#c0442e" stroke-width="5" fill="none" stroke-dasharray="14 10"/>
+      <!-- leader + trench label (on tan plate, clear zone) -->
+      <line x1="500" y1="700" x2="405" y2="840" stroke="#c0442e" stroke-width="2.5"/>
+      <text x="510" y="690" font-size="22" class="sans" fill="#c0442e" font-weight="bold">PALUNG JAWA</text>
+      <text x="510" y="716" font-size="17" class="sans" fill="#c0442e">±7.000 m</text>
+      <text x="60" y="595" font-size="19" class="sans" fill="#1e2a38" letter-spacing="2">LEMPENG EURASIA</text>
+      <text x="60" y="1170" font-size="19" class="sans" fill="#1e2a38" letter-spacing="2">LEMPENG INDO-AUSTRALIA</text>
+      <text class="cap" x="360" y="1128" text-anchor="middle" font-size="22">lempeng selatan menunjam ke bawah pulau — terus-menerus</text>
+      <text x="50" y="345" font-size="17" class="sans" fill="#efe7d3" letter-spacing="3">LAUT JAWA</text>
+      <!-- fish -->
+      <g id="fish">
+        <path d="M0 0 Q14 -10 30 0 Q14 10 0 0 Z M30 0 L42 -8 L42 8 Z" fill="#1e2a38" opacity=".8"/>
+      </g>
+      <!-- bubbles -->
+      <g id="bubbles"></g>
+      <!-- convergence arrows -->
+      <g id="arrL"><rect x="60" y="1210" width="120" height="10" fill="#c0442e"/><path d="M180 1200 L212 1215 L180 1230 Z" fill="#c0442e"/></g>
+      <g id="arrR"><rect x="540" y="1210" width="120" height="10" fill="#c0442e"/><path d="M540 1200 L508 1215 L540 1230 Z" fill="#c0442e"/></g>
+    </svg>
   </div>
 
+  <!-- S3: penggaris waktu -->
   <div class="lyr hidden" id="s3">
     <div class="tag">[ KECEPATAN ] <b>03/06</b></div>
-    <div id="cm">6.5<small> cm</small></div>
-    <div class="rule"></div>
-    <div class="sub">PER TAHUN — LEMPEng MENUNJAM DI BAWAH JAWA</div>
-    <div id="yr">0 tahun</div>
-    <div id="mtr">= 0 meter</div>
+    <svg width="720" height="1280" viewBox="0 0 720 1280" id="svg3">
+      <text x="360" y="360" text-anchor="middle" font-size="140" font-weight="700" fill="#c0442e" font-variant-numeric="tabular-nums" id="cmnum">6,5</text>
+      <text x="360" y="430" text-anchor="middle" font-size="30" class="sans" fill="#1e2a38" letter-spacing="4">SENTIMETER PER TAHUN</text>
+      <text x="360" y="480" text-anchor="middle" font-size="22" class="sans" fill="#8a7f6a">kecepatan kuku tanganmu tumbuh</text>
+      <!-- ruler track -->
+      <rect x="60" y="640" width="600" height="26" fill="none" stroke="#1e2a38" stroke-width="3"/>
+      <rect id="rfill" x="62" y="643" width="0" height="20" fill="#2b5f8a"/>
+      <g id="rticks3"></g>
+      <path id="rmark" d="M62 610 L52 590 L72 590 Z" fill="#c0442e"/>
+      <text x="60" y="700" font-size="16" class="sans" fill="#8a7f6a">0 th</text>
+      <text x="660" y="700" text-anchor="end" font-size="16" class="sans" fill="#8a7f6a">100 th</text>
+      <text id="yr" x="360" y="800" text-anchor="middle" font-size="64" font-weight="700" fill="#1e2a38" font-variant-numeric="tabular-nums">0 tahun</text>
+      <text id="mtr" x="360" y="890" text-anchor="middle" font-size="44" fill="#2b5f8a" font-weight="bold">= 0 meter</text>
+      <!-- phone for scale -->
+      <g id="phone">
+        <rect x="280" y="980" width="160" height="260" rx="18" fill="none" stroke="#1e2a38" stroke-width="4"/>
+        <text x="360" y="1120" text-anchor="middle" font-size="15" class="sans" fill="#8a7f6a">tinggi HP ≈ 15cm</text>
+      </g>
+      <text class="cap" x="360" y="940" text-anchor="middle" font-size="0"> </text>
+    </svg>
   </div>
 
+  <!-- S4: pegas + snap -->
   <div class="lyr hidden" id="s4">
     <div class="tag">[ GEMPA ] <b>04/06</b></div>
-    <div class="big" id="b1" style="top:400px;opacity:0">GEMPA BUKAN</div>
-    <div class="big" id="b2" style="top:500px;opacity:0">KEJADIAN<span class="red">.</span></div>
-    <div class="big" id="b3" style="top:660px;opacity:0;color:var(--red)">GERAKAN.</div>
-    <div id="stress">TEKANAN MENUMPUK...</div>
-    <svg id="svg4" width="720" height="1280" viewBox="0 0 720 1280" style="position:absolute;left:0;top:0;pointer-events:none"></svg>
+    <svg width="720" height="1280" viewBox="0 0 720 1280" id="svg4">
+      <text x="360" y="380" text-anchor="middle" font-size="72" font-weight="700" fill="#1e2a38" id="b1" opacity="0">GEMPA BUKAN</text>
+      <text x="360" y="480" text-anchor="middle" font-size="72" font-weight="700" fill="#1e2a38" id="b2" opacity="0">KEJADIAN<tspan fill="#c0442e">.</tspan></text>
+      <text x="360" y="640" text-anchor="middle" font-size="84" font-weight="700" fill="#c0442e" id="b3" opacity="0">GERAKAN.</text>
+      <g id="quakeviz"></g>
+      <text id="stress" x="360" y="920" text-anchor="middle" font-size="20" class="sans" fill="#8a7f6a" letter-spacing="4" opacity="0">TEKANAN MENUMPUK</text>
+      <text class="cap" x="360" y="1180" text-anchor="middle" font-size="23" id="cap4" opacity="0">tekunan bertahun-tahun dilepaskan dalam hitungan detik</text>
+    </svg>
   </div>
 
+  <!-- S5: peta busur -->
   <div class="lyr hidden" id="s5">
     <div class="tag">[ PETA ] <b>05/06</b></div>
-    <svg id="svg5" width="720" height="820" viewBox="0 0 720 820"></svg>
-    <div class="cap" id="s5cap">Pulau yang kau injak<br>bergerak setiap detik.</div>
+    <svg width="720" height="1280" viewBox="0 0 720 1280" id="svg5">
+      <text x="360" y="170" text-anchor="middle" font-size="26" class="sans" fill="#1e2a38" letter-spacing="4" id="h5" opacity="0">BUSUR GEMPA SELATAN JAWA</text>
+      <g id="map"></g>
+      <text class="cap" x="360" y="1180" text-anchor="middle" font-size="23">pulau yang kau injak bergerak setiap detik</text>
+    </svg>
   </div>
 
+  <!-- S6: outro -->
   <div class="lyr hidden" id="s6">
     <div class="tag">[ PENUTUP ] <b>06/06</b></div>
-    <div class="big" id="o1" style="opacity:0">BUMI TIDAK DIAM<span>.</span></div>
-    <div class="sub" id="o2" style="opacity:0">kita yang jarang merasakannya</div>
+    <svg width="720" height="1280" viewBox="0 0 720 1280" id="svg6">
+      <text x="360" y="420" text-anchor="middle" font-size="70" font-weight="700" fill="#1e2a38" id="o1" opacity="0">BUMI TIDAK DIAM<tspan fill="#c0442e">.</tspan></text>
+      <text x="360" y="560" text-anchor="middle" font-size="26" font-style="italic" fill="#8a7f6a" id="o2" opacity="0">kita yang jarang merasakannya</text>
+      <g id="island6" opacity="0">
+        <path d="M160 700 Q250 660 360 680 Q480 700 560 690 Q600 685 610 700 Q500 730 360 725 Q230 722 160 700 Z" fill="#c8b78f" stroke="#1e2a38" stroke-width="3"/>
+        <path d="M340 680 L352 610 L392 622 Q370 640 386 672 Z" fill="#7a6a52" stroke="#1e2a38" stroke-width="2.5"/>
+      </g>
+      <g id="waves6"></g>
+    </svg>
   </div>
 </div>
 <script>
@@ -109,141 +170,154 @@ const seg=(t,a,b)=>clamp((t-a)/(b-a),0,1);
 const $=id=>document.getElementById(id);
 const E={s1:$('s1'),s2:$('s2'),s3:$('s3'),s4:$('s4'),s5:$('s5'),s6:$('s6'),grat:$('grat'),stage:$('stage')};
 
-// ---- S2 cross-section (static build, animated via JS on svg elements) ----
-const svg2=$('svg2');
-svg2.innerHTML=`
-  <rect x="0" y="240" width="720" height="200" fill="#3a7ca5" opacity="0.85"/>
-  <rect x="0" y="240" width="720" height="200" fill="url(#waves)" opacity="0.25"/>
-  <defs><pattern id="waves" width="80" height="40" patternUnits="userSpaceOnUse">
-    <path d="M0 20 Q20 5 40 20 T80 20" stroke="#efe7d3" stroke-width="2" fill="none" opacity="0.5"/>
-  </pattern></defs>
-  <path id="eur" d="M40 620 L680 560 L680 1000 L40 1000 Z" fill="#b8a276" stroke="#1e2a38" stroke-width="3"/>
-  <path id="ina" d="M40 700 L620 780 L560 880 L40 820 Z" fill="#7a6a52" stroke="#1e2a38" stroke-width="3" transform="translate(0,0)"/>
-  <path d="M40 620 L680 560" stroke="#1e2a38" stroke-width="4" fill="none"/>
-  <path id="trench" d="M150 633 Q340 700 520 640" stroke="#c0442e" stroke-width="5" fill="none" stroke-dasharray="14 10"/>
-  <g id="arrL"><rect x="120" y="905" width="120" height="10" fill="#c0442e"/><path d="M240 895 L270 910 L240 925 Z" fill="#c0442e"/></g>
-  <g id="arrR"><rect x="480" y="955" width="120" height="10" fill="#c0442e"/><path d="M480 945 L450 960 L480 975 Z" fill="#c0442e"/></g>
-  <text class="lbl2" x="90" y="580" fill="#1e2a38">LAUT</text>
-  <text class="lbl2" x="440" y="700">LEMPENG EURASIA</text>
-  <text class="lbl2" x="70" y="880">LEMPENG INDO-AUSTRALIA</text>
-  <text class="lbl2" x="330" y="800" fill="#c0442e">PALUNG JAWA ±7.000 M</text>`;
+// wave path generator: repeating sine pattern width 1440, shift by JS
+function waveY(y,amp){let d=`M-80 ${y}`;for(let x=-80;x<1440;x+=80){d+=` Q${x+40} ${y-amp} ${x+80} ${y}`;}return d+' V1600 H-80 Z';}
+function makeWaves(id,base,amp,col1,col2){
+  $(id).innerHTML=
+   `<path id="${id}a" d="${waveY(base,amp)}" fill="${col1}" opacity=".9"/>`+
+   `<path id="${id}b" d="${waveY(base+26,amp*1.3)}" fill="${col2}" opacity=".95"/>`;
+}
+makeWaves('waves1',420,10,'#3a7ca5','#2b5f8a');
+makeWaves('waves2',300,8,'#3a7ca5','#2b5f8a');
+makeWaves('waves6',900,10,'#3a7ca5','#2b5f8a');
 
-// ---- S4 waves container ----
-const svg4=$('svg4');
+// ruler ticks S1 (depth gauge)
+{let s='';for(let i=0;i<=10;i++){const y=560+i*50;s+=`<line x1="600" y1="${y}" x2="${i%2?588:580}" y2="${y}" stroke="#1e2a38" stroke-width="2"/>`;}$('rticks').innerHTML=s;}
 
-// ---- S5 map ----
-const svg5=$('svg5');
-const PX=lon=>(lon-93)/27*640+40, PY=lat=>(6-lat)/18*700+60;
+// S3 ruler ticks (100 yr = 600px, tick per 20yr=120px)
+{let s='';for(let i=0;i<=5;i++){const x=60+i*120;s+=`<line x1="${x}" y1="636" x2="${x}" y2="670" stroke="#1e2a38" stroke-width="2"/>`;}$('rticks3').innerHTML=s;}
+
+// S5 map
+const PX=lon=>(lon-93)/27*640+40, PY=lat=>(6-lat)/18*700+190;
 const jawa=[[105.1,-5.9],[106.5,-6.0],[108,-6.2],[110,-6.4],[112,-6.7],[114.4,-6.9],[115.5,-7.7],[114.4,-8.2],[110,-8.2],[108,-7.8],[106,-7.4],[104.8,-7.0]];
-const path=jawa.map((p,i)=>(i?'L':'M')+PX(p[0])+' '+PY(p[1])).join(' ')+' Z';
-svg5.innerHTML=`
-  <path d="${path}" fill="#c8b78f" stroke="#1e2a38" stroke-width="3" opacity="0"/>
-  <path id="trench5" d="M${PX(102)} ${PY(-10.1)} Q ${PX(109)} ${PY(-10.9)} ${PX(116)} ${PY(-10.0)}" stroke="#c0442e" stroke-width="4" fill="none" stroke-dasharray="12 9" opacity="0"/>
-  <text class="lbl2s" x="${PX(109.5)}" y="${PY(-11.3)}" fill="#8a7f6a">PALUNG JAWA</text>
-  <text class="lbl2" x="${PX(106.6)}" y="${PY(-6.9)}">PULAU JAWA</text>
+const jpath=jawa.map((p,i)=>(i?'L':'M')+PX(p[0])+' '+PY(p[1])).join(' ')+' Z';
+$('map').innerHTML=`
+  <path d="M60 320 Q130 460 231 660" stroke="#8a7f6a" stroke-width="3" fill="none" opacity=".5" stroke-dasharray="2 6"/>
+  <text class="sans" x="46" y="304" font-size="16" fill="#8a7f6a" transform="rotate(52 46 304)">sumatra</text>
+  <ellipse cx="660" cy="${PY(-8.5)}" rx="20" ry="9" fill="#c8b78f" stroke="#1e2a38" stroke-width="2"/>
+  <ellipse cx="694" cy="${PY(-8.15)}" rx="12" ry="7" fill="#c8b78f" stroke="#1e2a38" stroke-width="2"/>
+  <path d="${jpath}" fill="#c8b78f" stroke="#1e2a38" stroke-width="3" id="jawa5" opacity="0"/>
+  <path id="trench5" d="M${PX(101.5)} ${PY(-10.0)} Q ${PX(109)} ${PY(-11.0)} ${PX(116.5)} ${PY(-9.9)}" stroke="#c0442e" stroke-width="4" fill="none" stroke-dasharray="12 9" opacity="0"/>
+  <text class="sans" x="60" y="${PY(-10.6)}" font-size="17" fill="#c0442e" font-weight="bold" id="plbl" opacity="0">PALUNG JAWA</text>
+  <text class="sans" x="${PX(106.6)}" y="${PY(-6.9)}" font-size="19" fill="#1e2a38" letter-spacing="2" id="jlbl" opacity="0">PULAU JAWA</text>
+  <g id="compass" opacity="0">
+    <circle cx="640" cy="250" r="30" fill="none" stroke="#1e2a38" stroke-width="2.5"/>
+    <path d="M640 228 L648 258 L640 250 L632 258 Z" fill="#c0442e"/>
+    <text x="640" y="215" text-anchor="middle" font-size="16" class="sans" fill="#1e2a38">U</text>
+  </g>
   <g id="quakes"></g>`;
 const QUAKES=[
-  {lon:95.9,lat:3.3,y:2004,m:9.1,n:'ACEH',dx:48,dy:-6},
-  {lon:99.9,lat:-7.9,y:2009,m:7.0,n:'TASIKMALAYA',dx:-4,dy:44},
-  {lon:107.7,lat:-9.4,y:2006,m:7.7,n:'PANGANDARAN',dx:16,dy:-12},
-  {lon:112.6,lat:-10.3,y:1994,m:7.8,n:'BANYUWANGI',dx:-196,dy:-26},
+  {lon:95.9,lat:3.3,y:2004,m:9.1,n:'ACEH 2004 M9.1',dx:56,dy:6},
+  {lon:99.9,lat:-7.9,y:2009,m:7.0,n:'TASIKMALAYA 2009 M7.0',dx:-60,dy:52},
+  {lon:107.7,lat:-9.4,y:2006,m:7.7,n:'PANGANDARAN 2006 M7.7',dx:22,dy:-16},
+  {lon:112.6,lat:-10.3,y:1994,m:7.8,n:'BANYUWANGI 1994 M7.8',dx:-234,dy:-44},
 ];
 
 function render(t){
   E.grat.style.transform=`translate(${-(t*6)%72}px,${-(t*4)%72}px)`;
   ['s1','s2','s3','s4','s5','s6'].forEach(k=>E[k].style.opacity=0);
   let shake=0;
+  const waveShift=(t*46)%80, waveShift2=(t*80)%80;
 
-  if(t<6.5){ // S1 diving depth counter
+  if(t<6.5){ // S1
     E.s1.style.opacity=1;
-    const p=seg(t,1,6.2);
-    const d=Math.floor(7192*Math.pow(p,1.7));
-    $('depth').innerHTML=d.toLocaleString('id-ID')+'<span class="m"> m</span>';
-    $('depth').style.fontSize=(130-Math.floor(Math.log10(d+1))*6)+'px';
-    // camera sinking: depth lines scroll up
-    $('depthline').style.top=((H-(t*260)%(H*0.9)))+'px';
-    $('depthline').style.opacity=.4*p;
-    // sea darkens with depth
-    const dk=Math.floor(60+40*seg(t,2,6));
-    document.documentElement.style.setProperty('--sea2',`rgb(${43-15*seg(t,2,6)},${95-40*seg(t,2,6)},${138-50*seg(t,2,6)})`);
+    const p=seg(t,1,6.2), d=Math.floor(7192*Math.pow(p,1.7));
+    $('depth').textContent=d.toLocaleString('id-ID');
+    $('rptr').setAttribute('transform',`translate(0,${p*500})`);
+    $('boat').setAttribute('transform',`translate(0,${Math.sin(t*2.2)*7}) rotate(${Math.sin(t*1.7)*3} 360 380)`);
+    $('waves1a').setAttribute('transform',`translate(${-waveShift},0)`);
+    $('waves1b').setAttribute('transform',`translate(${-waveShift2+40},0)`);
+    $('cloud1').setAttribute('transform',`translate(${(t*10)%720},0)`);
+    $('depth').setAttribute('fill', t>5?'#1d4666':'#1e2a38');
   }
-  else if(t<14){ // S2 cross-section
+  else if(t<14){ // S2
     E.s2.style.opacity=1;
-    const inP=ease(seg(t,6.5,7.6));
-    E.s2.style.transform=`scale(${lerp(1.12,1,inP)})`;
-    $('eur').style.opacity=pop(seg(t,6.8,7.4));
-    $('ina').style.opacity=pop(seg(t,7.4,8.0));
-    $('trench').style.opacity=pop(seg(t,9,9.8));
-    // plates creep toward each other forever (slow, constant)
-    const c=Math.sin((t-6.5)*.9)*14+((t-6.5)*10)%40;
-    $('arrL').setAttribute('transform',`translate(${20+((t*22)%30)},0)`);
-    $('arrR').setAttribute('transform',`translate(${-20-((t*22)%30)},0)`);
-    $('ina').setAttribute('transform',`translate(${c*0.6},${c*0.12})`);
-  }
-  else if(t<22){ // S3 cm/year accumulate
-    E.s3.style.opacity=1;
-    const q=pop(seg(t,14,14.9));
-    E.s3.style.transform=`scale(${lerp(.9,1,q)})`;
-    const years=Math.floor(100*seg(t,16.2,21.4));
-    $('yr').textContent=years+' tahun';
-    $('mtr').textContent='= '+(6.5*years/100).toFixed(1).replace('.',',')+' meter';
-    $('cm').style.opacity=t>16?.35:1;
-  }
-  else if(t<30){ // S4 stress -> snap -> waves
-    E.s4.style.opacity=1;
-    const st=seg(t,22,26.5);
-    $('stress').textContent='TEKANAN MENUMPUK'+'.'.repeat(1+Math.floor(t*2)%3);
-    $('stress').style.opacity=st;
-    // fault line under stress
-    let sh=st*3.5;
-    svg4.innerHTML=`<line x1="60" y1="760" x2="660" y2="760" stroke="#1e2a38" stroke-width="6"
-      transform="translate(${Math.sin(t*40)*sh},${Math.cos(t*47)*sh*0.5})"/>`;
-    // SNAP at 26.5
-    if(t>26.5){
-      shake=(1-ease(seg(t,26.5,27.4)))*14;
-      $('b1').style.opacity=pop(seg(t,26.8,27.5));
-      $('b2').style.opacity=pop(seg(t,27.1,27.8));
-      $('b3').style.opacity=pop(seg(t,27.6,28.3));
-      // expanding waves from snap point
-      let waves='';
-      for(let i=0;i<4;i++){
-        const wp=seg(t,26.5+i*.35,29.6);
-        if(wp>0&&wp<1){
-          const r=wp*760, op=(1-wp)*.7;
-          waves+=`<circle cx="360" cy="760" r="${r}" stroke="#c0442e" stroke-width="${4*(1-wp)+1}" fill="none" opacity="${op}"/>`;
-        }
-      }
-      svg4.innerHTML+=waves+`<line x1="60" y1="760" x2="330" y2="745" stroke="#1e2a38" stroke-width="6"/><line x1="390" y1="775" x2="660" y2="760" stroke="#1e2a38" stroke-width="6"/>`;
+    const inP=ease(seg(t,6.5,7.4));
+    E.s2.style.transform=`scale(${lerp(1.1,1,inP)})`;
+    $('waves2a').setAttribute('transform',`translate(${-waveShift},0)`);
+    $('waves2b').setAttribute('transform',`translate(${-waveShift2+40},0)`);
+    $('fish').setAttribute('transform',`translate(${lerp(120,540,seg(t,7.5,13.5))},470) ${seg(t,12.8,13.2)>0?'scale(-1,1) translate(-870,0)':''}`);
+    let bub='';
+    for(let i=0;i<5;i++){
+      const bp=((t*0.45+i*0.2)%1);
+      bub+=`<circle cx="${362+Math.sin(bp*9+i)*14}" cy="${830-bp*330}" r="${3+bp*5}" fill="none" stroke="#efe7d3" stroke-width="2" opacity="${(1-bp)*.8}"/>`;
     }
+    $('bubbles').innerHTML=bub;
+    $('arrL').setAttribute('transform',`translate(${(t*22)%34},0)`);
+    $('arrR').setAttribute('transform',`translate(${-(t*22)%34},0)`);
   }
-  else if(t<36){ // S5 map with historical quakes
+  else if(t<22){ // S3
+    E.s3.style.opacity=1;
+    const intro=pop(seg(t,14,14.8));
+    E.s3.style.transform=`scale(${lerp(.94,1,intro)})`;
+    const years=Math.floor(100*seg(t,15.8,21));
+    $('yr').textContent=years+' tahun';
+    const mtr=6.5*years/100;
+    $('mtr').textContent='= '+(mtr<10?mtr.toFixed(1).replace('.',','):Math.round(mtr))+' meter';
+    $('rfill').setAttribute('width',years*6);
+    $('rmark').setAttribute('transform',`translate(${years*6},0)`);
+    $('cmnum').setAttribute('fill', t>15.8?'#c0442e':'#1e2a38');
+  }
+  else if(t<30){ // S4
+    E.s4.style.opacity=1;
+    $('stress').style.opacity=seg(t,22,24);
+    $('b1').style.opacity=pop(seg(t,22.2,23)); $('b2').style.opacity=pop(seg(t,22.6,23.4));
+    const snap=t>26.5;
+    $('b3').style.opacity=snap?pop(seg(t,26.8,27.6)):0;
+    $('cap4').style.opacity=pop(seg(t,28.4,29.4));
+    // spring compression then snap
+    const st=seg(t,22,26.5);
+    const comp=lerp(120,40,st);
+    let jx=0;
+    if(snap){ jx=(1-ease(seg(t,26.5,27.2)))*50; shake=(1-ease(seg(t,26.5,27.3)))*13; }
+    let zig=`M${300-comp/2+ (snap?-jx:0)} 760`;
+    const n=8,zw=comp/n;
+    for(let i=0;i<n;i++)zig+=` L${300-comp/2+(snap?-jx:0)+zw*(i+.5)} ${760+(i%2?26:-26)}`;
+    zig+=` L${420-comp/2+(snap?-jx:0)} 760`;
+    let viz=`<rect x="80" y="710" width="${200-(snap?jx*0.5:0)-comp*0}" height="100" fill="#b8a276" stroke="#1e2a38" stroke-width="4" transform="translate(${snap?-jx:Math.sin(t*30)*st*4},0)"/>`+
+      `<rect x="${440+(snap?jx:0)-Math.sin(t*30)*st*4}" y="710" width="200" height="100" fill="#7a6a52" stroke="#1e2a38" stroke-width="4"/>`+
+      `<path d="${zig}" stroke="#c0442e" stroke-width="5" fill="none"/>`;
+    if(snap){
+      for(let i=0;i<4;i++){
+        const wp=seg(t,26.5+i*.3,29.6);
+        if(wp>0&&wp<1)viz+=`<circle cx="360" cy="760" r="${wp*700}" stroke="#c0442e" stroke-width="${4*(1-wp)+1}" fill="none" opacity="${(1-wp)*.6}"/>`;
+      }
+    }
+    $('quakeviz').innerHTML=viz;
+    $('stress').textContent=snap?'':'TEKANAN MENUMPUK'+'.'.repeat(1+Math.floor(t*2)%3);
+  }
+  else if(t<36){ // S5
     E.s5.style.opacity=1;
-    const inP=ease(seg(t,30,31));
-    E.s5.style.transform=`scale(${lerp(1.1,1,inP)})`;
-    const isl=svg5.querySelector('path'), tr=$('trench5');
-    isl.style.opacity=pop(seg(t,30.2,30.9));
-    tr.style.opacity=pop(seg(t,31.1,31.7));
+    const inP=ease(seg(t,30,30.9));
+    E.s5.style.transform=`scale(${lerp(1.09,1,inP)})`;
+    $('h5').style.opacity=pop(seg(t,30.1,30.7));
+    $('jawa5').style.opacity=pop(seg(t,30.4,31));
+    $('trench5').style.opacity=pop(seg(t,31.2,31.7));
+    $('plbl').style.opacity=pop(seg(t,31.4,31.9));
+    $('jlbl').style.opacity=pop(seg(t,30.8,31.3));
+    $('compass').style.opacity=pop(seg(t,30.6,31.2));
     let q='';
     QUAKES.forEach((k,i)=>{
       const p=pop(seg(t,31.9+i*.55,32.6+i*.55));
       if(p<=0)return;
-      const r=(8+(k.m-7)*16)*p;
-      q+=`<circle cx="${PX(k.lon)}" cy="${PY(k.lat)}" r="${r}" fill="none" stroke="#c0442e" stroke-width="3.5"/>
-          <circle cx="${PX(k.lon)}" cy="${PY(k.lat)}" r="5" fill="#c0442e"/>
-          <text class="lbl2s" x="${PX(k.lon)+k.dx}" y="${PY(k.lat)+k.dy}" fill="#c0442e">${k.n} ${k.y} M${k.m}</text>`;
+      const r=(10+(k.m-7)*17)*p, x=PX(k.lon), y=PY(k.lat);
+      q+=`<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="#c0442e" stroke-width="3.5"/>
+          <circle cx="${x}" cy="${y}" r="5" fill="#c0442e"/>
+          <text class="sans" x="${x+k.dx}" y="${y+k.dy}" font-size="15" fill="#c0442e" font-weight="bold">${k.n}</text>`;
     });
     $('quakes').innerHTML=q;
   }
-  else{ // S6 outro
+  else{ // S6
     E.s6.style.opacity=1;
     const q=pop(seg(t,36.3,37.1));
     const slam=1+.3*(1-ease(seg(t,36.3,36.9)));
     E.s6.style.transform=`scale(${lerp(slam,1,ease(seg(t,36.9,37.6)))})`;
-    $('o1').style.opacity=q;
-    $('o2').style.opacity=pop(seg(t,37.8,38.6));
+    $('o1').style.opacity=q; $('o2').style.opacity=pop(seg(t,37.8,38.6));
+    $('island6').style.opacity=pop(seg(t,36.8,37.6));
+    $('island6').setAttribute('transform',`translate(0,${Math.sin(t*2)*5})`);
+    $('waves6a').setAttribute('transform',`translate(${-waveShift},0)`);
+    $('waves6b').setAttribute('transform',`translate(${-waveShift2+40},0)`);
   }
-
-  // global shake (S4 snap)
   E.stage.style.transform=shake?`translate(${(Math.random()*2-1)*shake}px,${(Math.random()*2-1)*shake}px)`:'';
 }
 
@@ -251,11 +325,7 @@ const qp=new URLSearchParams(location.search);
 if(qp.has('t')){ render(parseFloat(qp.get('t'))); }
 else{
   let t0=performance.now();
-  function loop(now){
-    const t=((now-t0)/1000)%DUR;
-    render(t);
-    requestAnimationFrame(loop);
-  }
+  function loop(now){ const t=((now-t0)/1000)%DUR; render(t); requestAnimationFrame(loop); }
   requestAnimationFrame(loop);
 }
 window.__seek=t=>render(t);
