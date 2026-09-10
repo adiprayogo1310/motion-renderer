@@ -25,7 +25,9 @@ jobs:
         with: { node-version: '20' }
 
       - name: Install
-        run: npm i puppeteer --no-fund --no-audit
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          npm i puppeteer --no-fund --no-audit
 
       - name: Render frames
         run: node scripts/render.mjs "${{ inputs.fps || '30' }}"
