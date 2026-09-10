@@ -38,7 +38,7 @@ jobs:
           audio=$(ls vo/*.wav vo/*.mp3 vo/*.m4a vo/*.ogg 2>/dev/null | head -1)
           if [ -z "$audio" ]; then
             echo "no VO found — silent MP4"
-            ffmpeg -framerate "${{ inputs.fps || '30' }}" -i out/f_%05d.png -c:v libx264 -pix_fmt yuv420p -crf 20 -preset medium out.mp4
+            ffmpeg -y -framerate "${{ inputs.fps || '30' }}" -i out/f_%05d.png -c:v libx264 -pix_fmt yuv420p -crf 20 -preset medium out.mp4
             exit 0
           fi
           dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$audio")
