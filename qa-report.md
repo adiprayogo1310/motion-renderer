@@ -1,19 +1,20 @@
 # QA Report — vision
 
-Model: bai/glm-5.3-flash
+Model: or/inclusionai/ling-3.0-flash-vl:free
 Frames: 6
-Issues: 2
+Issues: 1
 
 Verdict: **FAIL**
 
 ## qa/frame_03.png
-OK
+ISSUE: Caption "dasarnya lebih dalam daripada Semeru tingginya" bertentang dengan angka 1.417m shown — Semeru ±3.676m, dasar tidak lebih dalam.
+OK: teks tidak bertabrakan, tidak terpotong tepi, ilustrasi (layang-layang, matahari, awan, skala) jelas dan sesuai tema.
 
 ## qa/frame_10.png
-
+OK
 
 ## qa/frame_18.png
-ISSUE: ilustrasi HP (tinggi HP ≈ 15cm) tidak memvisualisasikan perbandingan dengan 2,7 meter — perlu ditampilkan ~18 HP ditumpuk agar skala terlihat.
+OK
 
 ## qa/frame_25.png
 OK
@@ -22,4 +23,4 @@ OK
 OK
 
 ## qa/frame_38.png
-ISSUE: Ilustrasi menyerupai papan surfing/perahu dengan sirip, tidak jelas hubungannya dengan tema "bumi tidak diam" (tektonik/gempa).
+OK
