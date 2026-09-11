@@ -68,7 +68,7 @@ const stage=$('stage');
 /* build static DOM */
 stage.innerHTML=`
   <div id="stars"></div>
-  <div id="depthline" style="position:absolute;right:56px;top:340px;width:3px;height:600px;background:#1c2a44"></div>
+  <div id="depthline" style="position:absolute;right:56px;top:340px;width:3px;height:698px;background:#1c2a44"></div>
   <div id="altlabels"></div>
   <div class="tag">[ FAKTA BUMI ] <b>PALUNG JAWA</b></div>
   <svg width="720" height="1280" viewBox="0 0 720 1280" style="position:absolute;left:0;top:0" id="scene"></svg>
@@ -118,17 +118,17 @@ scene.innerHTML=`
     <path d="M40 900 L200 900 L300 1035 L420 1035 L520 900 L680 900" stroke="#ff5252" stroke-width="3" fill="none"/>
     <text x="360" y="1090" text-anchor="middle" font-size="22" fill="#ff5252" font-weight="800" id="floorLbl" opacity="0">PALUNG JAWA −7.192 m</text>
   </g>
-  <!-- Semeru comparison (right, dashed) -->
+  <!-- Semeru comparison (on land surface, left side; kaki di y=340 = permukaan) -->
   <g id="semeru" filter="url(#glowC)">
-    <path d="M470 900 L560 660 L650 900" stroke="#ff9f43" stroke-width="2.5" fill="rgba(255,159,67,.05)"/>
-    <text x="560" y="640" text-anchor="middle" font-size="17" fill="#ff9f43" font-weight="700">SEMERU 3.676 m</text>
+    <path d="M110 340 L200 92 L290 340" stroke="#ff9f43" stroke-width="2.5" fill="rgba(255,159,67,.05)"/>
+    <text x="200" y="70" text-anchor="middle" font-size="17" fill="#ff9f43" font-weight="700">SEMERU 3.676 m</text>
   </g>
   <!-- S2: two plates wireframe -->
   <g id="plates" filter="url(#glowC)">
     <path d="M60 520 L660 505 L660 585 L60 600 Z" stroke="#4dd8ff" stroke-width="2.5" fill="rgba(77,216,255,.05)"/>
     <text x="90" y="480" font-size="17" fill="#4dd8ff" font-weight="700">LEMPENG EURASIA</text>
     <path d="M60 760 L480 730 L600 800 L470 1000 L60 900 Z" stroke="#ff9f43" stroke-width="2.5" fill="rgba(255,159,67,.05)"/>
-    <text x="80" y="1080" font-size="17" fill="#ff9f43" font-weight="700">INDO-AUSTRALIA</text>
+    <text x="80" y="1058" font-size="17" fill="#ff9f43" font-weight="700">INDO-AUSTRALIA</text>
     <path d="M280 745 L360 800 L300 900" stroke="#ff5252" stroke-width="2.5" fill="none" stroke-dasharray="8 7"/>
     <g id="arrL"><rect x="80" y="1120" width="110" height="8" fill="#ff5252"/><path d="M190 1112 L220 1124 L190 1136 Z" fill="#ff5252"/></g>
     <g id="arrR"><rect x="530" y="1120" width="110" height="8" fill="#ff5252"/><path d="M530 1112 L500 1124 L530 1136 Z" fill="#ff5252"/></g>
@@ -145,7 +145,7 @@ scene.innerHTML=`
     <g id="nail">
       <rect x="330" y="920" width="14" height="70" rx="6" stroke="#4dd8ff" stroke-width="2" fill="rgba(77,216,255,.08)"/>
       <rect x="322" y="912" width="30" height="14" rx="4" stroke="#4dd8ff" stroke-width="2" fill="none"/>
-      <text x="360" y="1030" text-anchor="middle" font-size="16" fill="#5c728f">kuku tumbuh 6,5 cm/th</text>
+      <text x="360" y="1055" text-anchor="middle" font-size="16" fill="#5c728f">kuku tumbuh 6,5 cm/th</text>
     </g>
   </g>
   <!-- S4: spring + snap -->
@@ -161,7 +161,7 @@ scene.innerHTML=`
   <g id="eq" filter="url(#glowC)">
     <rect x="120" y="420" width="480" height="130" rx="14" stroke="#4dd8ff" stroke-width="2.5" fill="rgba(77,216,255,.06)"/>
     <text x="360" y="478" text-anchor="middle" font-size="30" font-weight="900" fill="#eef4fb">GEMPA = <tspan fill="#ff5252">GERAKAN</tspan></text>
-    <text x="360" y="522" text-anchor="middle" font-size="19" fill="#5c728f">yang tertahan bertahun-tahun</text>
+    <text x="360" y="522" text-anchor="middle" font-size="19" fill="#8fa4bd">yang tertahan bertahun-tahun</text>
     <text x="360" y="720" text-anchor="middle" font-size="22" fill="#eef4fb" id="eqLine2" opacity="0">Bukan <tspan fill="#ff5252" font-weight="900">KEJADIAN</tspan> yang datang tiba-tiba</text>
   </g>
   <!-- S6: outro -->
@@ -243,7 +243,7 @@ function render(t){
     $('sea').querySelector('path').setAttribute('d',setWaves(t,340));
     const so=pop(seg(t,SC[4]+0.3,SC[5]-0.3));
     $('semeru').style.opacity=so;$('semeru').querySelector('text').style.opacity=so;
-    tooltip(t,4,SC[4]+0.6,SC[5]-0.05,'LEBIH DALAM DARI <span class="cy">SEMERU</span>',180,700);
+    tooltip(t,4,SC[4]+0.6,SC[5]-0.05,'LEBIH DALAM DARI <span class="cy">SEMERU</span>',330,640);
   }
   else if(t<SC[8]){ // S2: plates (segmen 7: 18.71-22.63)
     const o=fade(t,7);

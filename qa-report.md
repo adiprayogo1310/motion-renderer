@@ -1,36 +1,36 @@
 # QA Report — vision
 
-Model: or/inclusionai/ling-3.0-flash-vl:free
+Model: bai/glm-5.3-flash
 Frames: 15
-Issues: 14
+Issues: 22
 
 Verdict: **FAIL**
 
 ## qa/frame_1.5.png
-OK
+ISSUE: Garis sumbu vertikal berhenti sebelum label -7.192 m; label menggantung tanpa garis/tick penandas.
 
 ## qa/frame_10.5.png
-ISSUE: Teks "6.000 m" terpotong/tersembunyi oleh garis merah horizontal yang melewatinya.
-ISSUE: Teks putih "lebih dalam dari Gunung Semeru" tumpang tindih garis merah palung, bacaan terganggu.
+ISSUE: garis merah palung menabrak teks caption "lebih dalam dari Gunung Semeru / PALUNG JAWA −7.192 m".
+ISSUE: garis merah menimpa label sumbu "−6.000 m", angka sulit terbaca.
 
 ## qa/frame_14.png
-ISSUE: Teks "Di situlah Lempeng INDO-AUSTRALIA" tumpang tindih dengan garis merah cross-section Palung Jawa, kurangi keterbacaan.
-ISSUE: Label kedalaman "–6.000 m" di sisi kanan tertutup/terpotong garis merah.
+ISSUE: Label sumbu "−6.000 m" tertimpa garis dasar laut merah.
+ISSUE: Blok teks caption ("Di situlah Lempeng INDO-AUSTRALIA") bertabrakan dengan garis palung merah yang memotongnya.
+ISSUE: Semeru (gunung darat) digambar berdiri di dasar laut palung — penempatan ilustrasi tidak sesuai konteks.
 
 ## qa/frame_18.png
-OK
+ISSUE: ilustrasi palung tidak terlihat, area tengah frame kosong hanya ada garis skala
+ISSUE: garis skala berhenti di ~ -6.000 m, tidak mencapai label -7.192 m
 
 ## qa/frame_20.5.png
-OK
+ISSUE: Label "-2.000 m" tertimpa tepi kanan kotak Lempeng Eurasia.
+ISSUE: Ujung bawah poligon oranye menabrak teks "Enam koma lima sentimeter".
 
 ## qa/frame_24.5.png
-ISSUE: Teks "Secepat kukumu", "kuku tumbuh 6,5 cm/th", dan "tumbuh" saling bertabrakan di bagian bawah (baris terlalu rapat, subteks abu-abut overlap kedua baris putih).
-ISSUE: Teks abu-abu "kuku tumbuh 6,5 cm/th" terbaca buram/ngasal di atas latar gelap (kontras rendah).
+ISSUE: teks kecil "kuku tumbuh 6,5 cm/th" tertimpa teks "Secepat kukumu" — tabrakan teks.
 
 ## qa/frame_28.png
-ISSUE: Teks "kuku tumbuh 6,5 cm/th" tertutup bar "Tekanan menumpuk"/"bertahun-tahun".
-ISSUE: Label skala kanan "m" terpotong di tepi frame.
-ISSUE: Ikon tekanan (ring) ambigu, tidak jelas ilustrasinya.
+ISSUE: Teks kecil "kuku tumbuh 6,5 cm/th" bertabrakan/tumpang tindih dengan teks "Tekanan menumpuk".
 
 ## qa/frame_3.4.png
 OK
@@ -39,25 +39,24 @@ OK
 OK
 
 ## qa/frame_33.5.png
-ISSUE: Teks "Gempa = gerakan tertahan" bertabrakan dengan label kedalaman "-7.192 m" di baris yang sama, saling berdekatan hingga berpotensi tumpang tindih.
-OK
-OK
+ISSUE: Teks caption "Gempa bukan kejadian" tampak terpotong / kalimat tidak lengkap.
 
 ## qa/frame_36.2.png
-OK.
+ISSUE: subteks "yang tertahan bertahun-tahun" kontras terlalu rendah, hampir tak terbaca di atas kotak gelap.
 
 ## qa/frame_38.8.png
-OK
+ISSUE: subjudul "yang tertahan bertahun-tahun" kontras terlalu rendah di box gelap, susah dibaca.
+ISSUE: garis skala kedalaman berhenti di ~-6.000 m, label "-7.192 m" menggantung tanpa garis.
+ISSUE: jarak tepi kanan kartu ke label "-2.000 m" cuma ~10px, terlalu rapat.
 
 ## qa/frame_41.png
-ISSUE: Garis merah tipis di tengah frame (~y680) tidak jelas — ilustrasi ngasal, tidak ada label/konteks makna.
-ISSUE: Skala kedalaman `-7.192 m` di kanan bawah ambigu — untuk Palung Jawa (~7.192 m) format angka Indonesia pakai titik sebagai ribuan, bukan desimal, berpotensi salah baca.
-
-OK untuk: tidak ada tabrakan teks, tidak ada elemen terpotong tepi.
+ISSUE: garis merah di tengah mengambang tanpa label/konteks — tidak jelas mewakili apa (sesar/trench).
+ISSUE: garis sumbu kedalaman berakhir di ~−6.000 m, label −7.192 m di bawahnya tanpa garis/tick.
 
 ## qa/frame_5.2.png
-OK
+ISSUE: Label "DASAR LAUT −7.192 m" salah posisi — berada di antara skala −4.000 dan −6.000, bukan di −7.192 m.
+ISSUE: Garis putus-putus berhenti di ~−2.300 m, tidak menyambung ke dasar laut.
+ISSUE: Pill label menabrak garis sumbu vertikal di kanan.
 
 ## qa/frame_7.5.png
-ISSUE: Skala vertikal berakhir di -6.000 m, marker -7.192 m terputus dari garis skala.
-ISSUE: Frame kosong, tidak ada ilustrasi palung/laut—hanya teks dan skala.
+OK
