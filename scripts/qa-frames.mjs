@@ -3,8 +3,13 @@
 import puppeteer from 'puppeteer';
 import { mkdirSync, rmSync } from 'fs';
 import { resolve } from 'path';
+import { readFileSync } from 'fs';
 
-const SCENES = [3, 10, 18, 25, 33, 38]; // satu frame per scene (6 scene, DUR=40)
+const htmlSrc = readFileSync(resolve(import.meta.dirname, '..', 'video/index.html'), 'utf8');
+const DUR = parseFloat(htmlSrc.match(/const DUR=([\d.]+)/)[1]);
+
+// 1 keyframe per caption segment (14 segmen dari VO) + beberapa transisi
+const SCENES = [1.5, 3.4, 5.2, 7.5, 10.5, 14, 18, 20.5, 24.5, 28, 30.5, 33.5, 36.2, 38.8, 41];
 const root = resolve(import.meta.dirname, '..');
 rmSync(resolve(root, 'qa'), { recursive: true, force: true });
 mkdirSync(resolve(root, 'qa'), { recursive: true });

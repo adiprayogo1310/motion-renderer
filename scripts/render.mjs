@@ -5,8 +5,10 @@ import { mkdirSync } from 'fs';
 import { resolve } from 'path';
 
 const fps = Number(process.argv[2] || 30);
-const DUR = 40;
 const root = resolve(import.meta.dirname, '..');
+// DUR dibaca dari video/index.html (baris "const DUR=...") — timeline mengikuti VO
+const htmlSrc = await (await import('fs')).promises.readFile(resolve(root, 'video/index.html'), 'utf8');
+const DUR = parseFloat(htmlSrc.match(/const DUR=([\d.]+)/)[1]);
 mkdirSync(resolve(root, 'out'), { recursive: true });
 
 const browser = await puppeteer.launch({

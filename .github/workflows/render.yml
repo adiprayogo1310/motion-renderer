@@ -6,8 +6,8 @@ on:
         description: 'Frames per second'
         default: '30'
       retime:
-        description: 'Stretch timeline to VO duration (true) or keep 40s'
-        default: 'true'
+        description: 'Legacy stretch (HTML timeline already matches VO: keep false)'
+        default: 'false'
       skip_qa:
         description: 'Skip vision QA (true/false)'
         default: 'false'
@@ -81,6 +81,12 @@ jobs:
           dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$audio")
           RETIME="${{ inputs.retime }}"
           [ -z "$RETIME" ] && RETIME="true"
+          # HTML timeline sudah native VO duration -> retime=false berarti langsung mux
+          if [ "$RETIME" = "false" ]; then
+            ffmpeg -y -framerate "${{ inputs.fps || '30' }}" -i out/f_%05d.png -i "$audio" \
+              -map 0:v -map 1:a -c:v libx264 -pix_fmt yuv420p -crf 20 -c:a aac out.mp4
+            exit 0
+          fi
           echo "retime=$RETIME vo_dur=$dur"
           if [ "$RETIME" = "true" ]; then
             # stretch video 40s -> durasi VO, audio utuh tanpa dipotong

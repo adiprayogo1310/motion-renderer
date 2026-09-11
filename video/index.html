@@ -2,385 +2,305 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Gunung Terbalik — Palung Jawa</title>
+<title>Gunung Terbalik — Palung Jawa (hynGG style)</title>
 <style>
   :root{
-    --paper:#efe7d3; --ink:#1e2a38; --sea:#2b5f8a; --sea2:#3a7ca5;
-    --red:#c0442e; --dim:#8a7f6a; --sand:#c8b78f; --rock:#7a6a52; --deep:#1d4666;
+    --bg:#0d1526; --line:#1c2a44; --cyan:#4dd8ff; --cyan-dim:#2b7fa0;
+    --fg:#eef4fb; --dim:#5c728f; --red:#ff5252; --orange:#ff9f43; --tan:#c8b78f;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  html,body{width:100%;height:100%;background:var(--paper);overflow:hidden;
-    font-family:'Liberation Serif','DejaVu Serif',Georgia,serif}
-  #stage{position:relative;width:720px;height:1280px;background:var(--paper);overflow:hidden}
+  html,body{width:100%;height:100%;background:var(--bg);overflow:hidden;
+    font-family:'Liberation Sans','DejaVu Sans',Arial,sans-serif}
+  #stage{position:relative;width:720px;height:1280px;background:var(--bg);overflow:hidden}
   .lyr{position:absolute;inset:0}
   .hidden{opacity:0}
-  .tag{position:absolute;top:40px;left:40px;color:var(--dim);font-size:16px;letter-spacing:.26em;font-style:italic;z-index:5}
-  .tag b{color:var(--ink);font-weight:400;font-style:normal}
-  .dim{color:var(--dim)} .red{color:var(--red)} .sea{color:var(--sea)}
-  .sans{font-family:'Liberation Sans','DejaVu Sans',Arial,sans-serif}
-  #grat{position:absolute;inset:0;opacity:.45;
-    background-image:linear-gradient(rgba(30,42,56,.10) 1px,transparent 1px),
-                     linear-gradient(90deg,rgba(30,42,56,.10) 1px,transparent 1px);
-    background-size:72px 72px}
-  svg{display:block}
-  .big{font-weight:700;color:var(--ink)}
-  .cap{position:absolute;font-style:italic;color:var(--ink)}
+  .tag{position:absolute;top:150px;left:40px;color:var(--dim);font-size:15px;letter-spacing:.24em}
+  .tag b{color:var(--cyan);font-weight:400}
+  .cap{position:absolute;left:0;width:100%;text-align:center;font-size:30px;font-weight:700;color:var(--fg);line-height:1.45}
+  .cap .cy{color:var(--cyan)}
+  .tt{position:absolute;padding:10px 16px;border:1.5px solid #ffffffcc;border-radius:10px;
+      font-size:20px;font-weight:700;color:var(--fg);background:rgba(13,21,38,.85);white-space:nowrap}
+  .tt .cy{color:var(--cyan)}
+  .star{position:absolute;background:#22304d;border-radius:50%}
+  #altitude{position:absolute;right:56px;top:340px;bottom:300px;width:3px;background:var(--line)}
+  .alt{position:absolute;right:36px;font-size:17px;color:var(--dim);font-weight:700}
+  .alt b{color:var(--cyan)}
+  .alt.red b{color:var(--red)}
 </style>
 </head>
 <body>
-<div id="stage">
-  <div id="grat"></div>
-
-  <!-- S1: perahu di atas jurang -->
-  <div class="lyr" id="s1">
-    <div class="tag">[ FAKTA BUMI ] <b>01/06</b></div>
-    <svg width="720" height="1280" viewBox="0 0 720 1280" id="svg1">
-    <defs>
-      <filter id="glowW" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur stdDeviation="2.2" result="b"/>
-        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
-      <circle cx="600" cy="180" r="46" fill="#d9a441" opacity=".85"/>
-      <g id="cloud1"><ellipse cx="180" cy="170" rx="52" ry="16" fill="#e2d9c2"/><ellipse cx="230" cy="160" rx="40" ry="13" fill="#e2d9c2"/></g>
-      <text x="360" y="120" text-anchor="middle" font-size="34" letter-spacing="10" class="sans" fill="#1e2a38" font-weight="bold">SELATAN JAWA</text>
-      <!-- boat -->
-      <g id="boat">
-        <path d="M300 388 Q360 410 420 388 L400 372 L320 372 Z" fill="#8a4a2b" stroke="#1e2a38" stroke-width="3"/>
-        <line x1="360" y1="372" x2="360" y2="300" stroke="#1e2a38" stroke-width="4"/>
-        <path d="M364 306 L416 364 L364 364 Z" fill="#efe7d3" stroke="#1e2a38" stroke-width="3"/>
-        <path d="M356 314 L318 364 L356 364 Z" fill="#c0442e" opacity=".85"/>
-      </g>
-      <!-- waves: 3 layers, shifted by JS -->
-      <g id="waves1"></g>
-      <!-- depth gauge ruler -->
-      <g id="ruler">
-        <line x1="600" y1="560" x2="600" y2="1060" stroke="#1e2a38" stroke-width="3"/>
-        <g id="rticks"></g>
-        <path id="rptr" d="M600 560 L580 550 L580 570 Z" fill="#c0442e"/>
-        <text x="592" y="540" text-anchor="end" font-size="14" class="sans" fill="#8a7f6a">0</text>
-        <text x="592" y="1075" text-anchor="end" font-size="14" class="sans" fill="#8a7f6a">7.000m</text>
-      </g>
-      <text id="depth" x="240" y="700" font-size="104" font-weight="700" fill="#ffffff" font-variant-numeric="tabular-nums">0</text>
-      <text x="240" y="760" font-size="30" class="sans" fill="#cfe3f2">meter di bawah laut</text>
-      <g id="glints"></g>
-      <text class="cap" x="320" y="1180" text-anchor="middle" font-size="20">palung lebih dalam daripada Semeru yang tinggi</text>
-    </svg>
-  </div>
-
-  <!-- S2: potongan bumi -->
-  <div class="lyr hidden" id="s2">
-    <div class="tag">[ POTONGAN BUMI ] <b>02/06</b></div>
-    <svg width="720" height="1280" viewBox="0 0 720 1280" id="svg2">
-    <defs>
-      <filter id="cutShadow" x="-30%" y="-30%" width="160%" height="160%">
-        <feDropShadow dx="0" dy="7" stdDeviation="0" flood-color="#1e2a38" flood-opacity="0.35"/>
-      </filter>
-      <filter id="paperEdge">
-        <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" result="n"/>
-        <feDisplacementMap in="SourceGraphic" in2="n" scale="6"/>
-      </filter>
-    </defs>
-      <rect x="0" y="300" width="720" height="140" fill="#3a7ca5"/>
-      <g id="waves2"></g>
-      <!-- Eurasia plate -->
-      <path d="M0 540 L720 495 L720 790 L0 830 Z" fill="#b8a276" stroke="#1e2a38" stroke-width="4" filter="url(#paperEdge)" id="plateEur"/>
-      <!-- strata -->
-      <path d="M0 640 L720 600 L720 640 L0 685 Z" fill="#a08a60" opacity=".7"/>
-      <path d="M0 730 L720 695 L720 725 L0 762 Z" fill="#8a744e" opacity=".6"/>
-      <!-- Indo-Australia slab diving -->
-      <path d="M0 880 L520 850 L640 940 L540 1130 L0 1030 Z" fill="#7a6a52" stroke="#1e2a38" stroke-width="4" filter="url(#cutShadow)"/>
-      <path d="M0 960 L470 935 L560 1000 L480 1090 L0 1000 Z" fill="#665540" opacity=".7"/>
-      <!-- trench notch + dashed marker -->
-      <path d="M340 845 Q360 880 380 842" stroke="#1e2a38" stroke-width="4" fill="none"/>
-      <path d="M300 852 Q360 900 430 848" stroke="#c0442e" stroke-width="5" fill="none" stroke-dasharray="14 10"/>
-      <!-- leader + trench label (on tan plate, clear zone) -->
-      <line x1="500" y1="700" x2="405" y2="840" stroke="#c0442e" stroke-width="2.5"/>
-      <text x="510" y="690" font-size="22" class="sans" fill="#c0442e" font-weight="bold">PALUNG JAWA</text>
-      <text x="510" y="716" font-size="17" class="sans" fill="#c0442e">±7.000 m</text>
-      <text x="60" y="595" font-size="19" class="sans" fill="#1e2a38" letter-spacing="2">LEMPENG EURASIA</text>
-      <text x="60" y="1170" font-size="19" class="sans" fill="#1e2a38" letter-spacing="2">LEMPENG INDO-AUSTRALIA</text>
-      <text class="cap" x="360" y="1128" text-anchor="middle" font-size="22">lempeng selatan menunjam ke bawah pulau — terus-menerus</text>
-      <text x="50" y="345" font-size="17" class="sans" fill="#efe7d3" letter-spacing="3">LAUT JAWA</text>
-      <!-- fish -->
-      <g id="fish">
-        <path d="M0 0 Q14 -10 30 0 Q14 10 0 0 Z M30 0 L42 -8 L42 8 Z" fill="#1e2a38" opacity=".8"/>
-      </g>
-      <!-- bubbles -->
-      <g id="bubbles"></g>
-      <!-- convergence arrows -->
-      <g id="arrL"><rect x="60" y="1210" width="120" height="10" fill="#c0442e"/><path d="M180 1200 L212 1215 L180 1230 Z" fill="#c0442e"/></g>
-      <g id="arrR"><rect x="540" y="1210" width="120" height="10" fill="#c0442e"/><path d="M540 1200 L508 1215 L540 1230 Z" fill="#c0442e"/></g>
-    </svg>
-  </div>
-
-  <!-- S3: penggaris waktu -->
-  <div class="lyr hidden" id="s3">
-    <div class="tag">[ KECEPATAN ] <b>03/06</b></div>
-    <svg width="720" height="1280" viewBox="0 0 720 1280" id="svg3">
-      <text x="360" y="360" text-anchor="middle" font-size="140" font-weight="700" fill="#c0442e" font-variant-numeric="tabular-nums" id="cmnum">6,5</text>
-      <text x="360" y="430" text-anchor="middle" font-size="30" class="sans" fill="#1e2a38" letter-spacing="4">SENTIMETER PER TAHUN</text>
-      <text x="360" y="480" text-anchor="middle" font-size="22" class="sans" fill="#8a7f6a">kecepatan kuku tanganmu tumbuh</text>
-      <!-- ruler track -->
-      <rect x="60" y="640" width="600" height="26" fill="none" stroke="#1e2a38" stroke-width="3"/>
-      <rect id="rfill" x="62" y="643" width="0" height="20" fill="#2b5f8a"/>
-      <g id="rticks3"></g>
-      <path id="rmark" d="M62 610 L52 590 L72 590 Z" fill="#c0442e"/>
-      <text x="60" y="700" font-size="16" class="sans" fill="#8a7f6a">0 th</text>
-      <text x="660" y="700" text-anchor="end" font-size="16" class="sans" fill="#8a7f6a">100 th</text>
-      <text id="yr" x="360" y="800" text-anchor="middle" font-size="64" font-weight="700" fill="#1e2a38" font-variant-numeric="tabular-nums">0 tahun</text>
-      <text id="mtr" x="360" y="890" text-anchor="middle" font-size="44" fill="#2b5f8a" font-weight="bold">= 0 meter</text>
-      <!-- phone for scale -->
-      <g id="phone">
-        <rect x="280" y="980" width="160" height="260" rx="18" fill="none" stroke="#1e2a38" stroke-width="4"/>
-        <text x="360" y="1120" text-anchor="middle" font-size="15" class="sans" fill="#8a7f6a">tinggi HP ≈ 15cm</text>
-      </g>
-      <text class="cap" x="360" y="940" text-anchor="middle" font-size="0"> </text>
-    </svg>
-  </div>
-
-  <!-- S4: pegas + snap -->
-  <div class="lyr hidden" id="s4">
-    <div class="tag">[ GEMPA ] <b>04/06</b></div>
-    <svg width="720" height="1280" viewBox="0 0 720 1280" id="svg4">
-      <text x="360" y="380" text-anchor="middle" font-size="72" font-weight="700" fill="#1e2a38" id="b1" opacity="0">GEMPA BUKAN</text>
-      <text x="360" y="480" text-anchor="middle" font-size="72" font-weight="700" fill="#1e2a38" id="b2" opacity="0">KEJADIAN<tspan fill="#c0442e">.</tspan></text>
-      <text x="360" y="640" text-anchor="middle" font-size="84" font-weight="700" fill="#c0442e" id="b3" opacity="0">GERAKAN.</text>
-      <g id="quakeviz"></g>
-      <text id="stress" x="360" y="920" text-anchor="middle" font-size="20" class="sans" fill="#8a7f6a" letter-spacing="4" opacity="0">TEKANAN MENUMPUK</text>
-      <text class="cap" x="360" y="1180" text-anchor="middle" font-size="23" id="cap4" opacity="0">tekunan bertahun-tahun dilepaskan dalam hitungan detik</text>
-    </svg>
-  </div>
-
-  <!-- S5: peta busur -->
-  <div class="lyr hidden" id="s5">
-    <div class="tag">[ PETA ] <b>05/06</b></div>
-    <svg width="720" height="1280" viewBox="0 0 720 1280" id="svg5">
-      <text x="360" y="170" text-anchor="middle" font-size="26" class="sans" fill="#1e2a38" letter-spacing="4" id="h5" opacity="0">BUSUR GEMPA SELATAN JAWA</text>
-      <g id="map"></g>
-      <text class="cap" x="360" y="1180" text-anchor="middle" font-size="23">pulau yang kau injak bergerak setiap detik</text>
-    </svg>
-  </div>
-
-  <!-- S6: outro -->
-  <div class="lyr hidden" id="s6">
-    <div class="tag">[ PENUTUP ] <b>06/06</b></div>
-    <svg width="720" height="1280" viewBox="0 0 720 1280" id="svg6">
-      <text x="360" y="420" text-anchor="middle" font-size="70" font-weight="700" fill="#1e2a38" id="o1" opacity="0">BUMI TIDAK DIAM<tspan fill="#c0442e">.</tspan></text>
-      <text x="360" y="560" text-anchor="middle" font-size="26" font-style="italic" fill="#8a7f6a" id="o2" opacity="0">kita yang jarang merasakannya</text>
-      <g id="island6" opacity="0">
-        <path d="M170 878 Q210 760 330 758 Q450 760 540 752 Q600 748 628 770 Q560 880 400 890 Q260 896 170 878 Z" fill="#c8b78f" stroke="#1e2a38" stroke-width="3"/>
-        <path d="M292 764 L368 648 L372 648 L374 656 L448 746 Q380 764 292 764 Z" fill="#7a6a52" stroke="#1e2a38" stroke-width="2.5"/>
-        <path d="M360 652 Q366 640 374 648 Q376 638 384 644 Q382 630 392 636" fill="none" stroke="#c0442e" stroke-width="4" opacity=".75"/>
-        <rect x="500" y="722" width="6" height="30" fill="#1e2a38"/>
-        <circle cx="503" cy="716" r="13" fill="#4a7a4e" stroke="#1e2a38" stroke-width="2"/>
-        <rect x="536" y="730" width="5" height="25" fill="#1e2a38"/>
-        <circle cx="538" cy="725" r="10" fill="#5f8a5e" stroke="#1e2a38" stroke-width="2"/>
-      </g>
-      <g id="waves6"></g>
-    </svg>
-  </div>
-</div>
+<div id="stage"></div>
 <script>
-const W=720,H=1280,DUR=40;
+/* ====== timeline dari VO 43.968s — segmen dari silencedetect ====== */
+const SEG=[
+  {a:0.00, b:3.62},  {a:4.58, b:5.71},  {a:6.04, b:8.77},  {a:9.03, b:11.53},
+  {a:12.48,b:16.33}, {a:17.31,b:18.44}, {a:18.71,b:22.63}, {a:23.59,b:25.88},
+  {a:26.83,b:28.91}, {a:29.88,b:31.29}, {a:32.24,b:34.53}, {a:35.50,b:37.52},
+  {a:38.50,b:39.24}, {a:39.51,b:43.09},
+];
+const DUR=43.97;
+/* caption kata-per-kata per segmen (naskah VO) */
+const CAP=[
+  "Selatan Pulau Jawa,",          // 1
+  "permukaan laut|tampak tenang", // 2
+  "Tapi di bawahnya,",            // 3
+  "dasar laut jatuh|TUJUH RIBU METER", // 4
+  "lebih dalam dari|Gunung Semeru", // 5
+  "Di situlah Lempeng|INDO-AUSTRALIA", // 6
+  "menunjam ke bawah|Pulau Jawa", // 7
+  "Enam koma lima sentimeter|per tahun", // 8
+  "Secepat kukumu|tumbuh",        // 9
+  "Tekanan menumpuk|bertahun-tahun", // 10
+  "Saat lepas —|itulah GEMPA",    // 11
+  "Gempa bukan kejadian|Gempa = gerakan tertahan", // 12
+  "Bumi tidak|pernah diam",       // 13
+  "Kita yang jarang|merasakannya", // 14
+];
+const W=720,H=1280;
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const lerp=(a,b,t)=>a+(b-a)*t;
 const ease=t=>t<0?0:t>1?1:t*t*(3-2*t);
 const pop=t=>t<0?0:t>1?1:1-Math.pow(1-t,3);
 const seg=(t,a,b)=>clamp((t-a)/(b-a),0,1);
 const $=id=>document.getElementById(id);
-const E={s1:$('s1'),s2:$('s2'),s3:$('s3'),s4:$('s4'),s5:$('s5'),s6:$('s6'),grat:$('grat'),stage:$('stage')};
+const stage=$('stage');
 
-// wave path generator: repeating sine pattern width 1440, shift by JS
-function waveY(y,amp){let d=`M-80 ${y}`;for(let x=-80;x<1440;x+=80){d+=` Q${x+40} ${y-amp} ${x+80} ${y}`;}return d+' V1600 H-80 Z';}
-function makeWaves(id,base,amp,col1,col2){
-  $(id).innerHTML=
-   `<path id="${id}a" d="${waveY(base,amp)}" fill="${col1}" opacity=".9"/>`+
-   `<path id="${id}b" d="${waveY(base+26,amp*1.3)}" fill="${col2}" opacity=".95"/>`;
-}
-makeWaves('waves1',420,10,'#3a7ca5','#2b5f8a');
-makeWaves('waves2',300,8,'#3a7ca5','#2b5f8a');
-makeWaves('waves6',900,10,'#3a7ca5','#2b5f8a');
+/* build static DOM */
+stage.innerHTML=`
+  <div id="stars"></div>
+  <div id="depthline" style="position:absolute;right:56px;top:340px;width:3px;height:600px;background:#1c2a44"></div>
+  <div id="altlabels"></div>
+  <div class="tag">[ FAKTA BUMI ] <b>PALUNG JAWA</b></div>
+  <svg width="720" height="1280" viewBox="0 0 720 1280" style="position:absolute;left:0;top:0" id="scene"></svg>
+  <div id="tooltip" class="tt hidden"></div>
+  <div id="caption" class="cap" style="bottom:210px"></div>
+  <div id="logo" style="position:absolute;top:36px;left:36px;display:flex;align-items:center;gap:10px">
+    <div style="width:40px;height:40px;border-radius:50%;background:#ff5252;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:16px">G</div>
+    <div style="font-weight:900;color:#fff;font-size:19px">FAKTA<span style="color:var(--cyan)">GEO</span></div>
+  </div>`;
+$('stars').innerHTML=Array.from({length:42},(_,i)=>
+  `<div class="star" style="left:${(i*173)%700}px;top:${(i*257)%1240}px;width:${2+(i%3)}px;height:${2+(i%3)}px;opacity:${.3+(i%5)*.12}"></div>`).join('');
+$('altlabels').innerHTML=`
+  <div class="alt" style="top:330px">0 <b>m</b></div>
+  <div class="alt" style="top:510px">−2.000 <b>m</b></div>
+  <div class="alt" style="top:700px">−4.000 <b>m</b></div>
+  <div class="alt" style="top:890px">−6.000 <b>m</b></div>
+  <div class="alt red" style="top:1035px" id="alt7000">−7.192 <b>m</b></div>`;
 
-// ruler ticks S1 (depth gauge)
-{let s='';for(let i=0;i<=10;i++){const y=560+i*50;s+=`<line x1="600" y1="${y}" x2="${i%2?588:580}" y2="${y}" stroke="#1e2a38" stroke-width="2"/>`;}$('rticks').innerHTML=s;}
-
-// S3 ruler ticks (100 yr = 600px, tick per 20yr=120px)
-{let s='';for(let i=0;i<=5;i++){const x=60+i*120;s+=`<line x1="${x}" y1="636" x2="${x}" y2="670" stroke="#1e2a38" stroke-width="2"/>`;}$('rticks3').innerHTML=s;}
-
-// S5 map
-const PX=lon=>(lon-93)/27*640+40, PY=lat=>(6-lat)/18*700+190;
-const jawa=[[105.1,-5.9],[106.5,-6.0],[108,-6.2],[110,-6.4],[112,-6.7],[114.4,-6.9],[115.5,-7.7],[114.4,-8.2],[110,-8.2],[108,-7.8],[106,-7.4],[104.8,-7.0]];
-const jpath=jawa.map((p,i)=>(i?'L':'M')+PX(p[0])+' '+PY(p[1])).join(' ')+' Z';
-$('map').innerHTML=`
- <path id="sumatra5" d="M${PX(93.2)} ${PY(2.5)} L${PX(97)} ${PY(0.5)} L${PX(100.5)} ${PY(-2.2)} L${PX(103.5)} ${PY(-4.8)} L${PX(105.6)} ${PY(-5.85)} L${PX(104.2)} ${PY(-6.1)} L${PX(101.2)} ${PY(-4.2)} L${PX(97.5)} ${PY(-1.0)} L${PX(93.5)} ${PY(2.2)} Z" fill="#c8b78f" stroke="#1e2a38" stroke-width="2.5" opacity="0"/>
- <text class="sans" x="188" y="452" font-size="16" fill="#5f5748" letter-spacing="1" transform="rotate(52 188 452)">SUMATRA</text>
-  <ellipse cx="660" cy="${PY(-8.5)}" rx="20" ry="9" fill="#c8b78f" stroke="#1e2a38" stroke-width="2"/>
-  <ellipse cx="694" cy="${PY(-8.15)}" rx="12" ry="7" fill="#c8b78f" stroke="#1e2a38" stroke-width="2"/>
-  <path d="${jpath}" fill="#c8b78f" stroke="#1e2a38" stroke-width="3" id="jawa5" opacity="0"/>
-  <path id="trench5" d="M${PX(101.5)} ${PY(-10.0)} Q ${PX(109)} ${PY(-11.0)} ${PX(116.5)} ${PY(-9.9)}" stroke="#c0442e" stroke-width="4" fill="none" stroke-dasharray="12 9" opacity="0"/>
-  <text class="sans" x="60" y="${PY(-10.6)}" font-size="17" fill="#c0442e" font-weight="bold" id="plbl" opacity="0">PALUNG JAWA</text>
-  <text class="sans" x="${PX(106.6)}" y="${PY(-6.9)}" font-size="19" fill="#1e2a38" letter-spacing="2" id="jlbl" opacity="0">PULAU JAWA</text>
-  <g id="compass" opacity="0">
-    <circle cx="640" cy="250" r="30" fill="none" stroke="#1e2a38" stroke-width="2.5"/>
-    <path d="M640 228 L648 258 L640 250 L632 258 Z" fill="#c0442e"/>
-    <text x="640" y="215" text-anchor="middle" font-size="16" class="sans" fill="#1e2a38">U</text>
+const scene=$('scene');
+/* wireframe elements (hynGG style) */
+scene.innerHTML=`
+  <defs>
+    <filter id="glowC" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- S1: permukaan laut wireframe -->
+  <g id="sea" filter="url(#glowC)">
+    <path d="M40 340 Q120 332 200 340 T360 340 T520 340 T680 340" stroke="#4dd8ff" stroke-width="2.5" fill="none"/>
+    <path d="M40 352 Q120 346 200 352 T360 352 T520 352 T680 352" stroke="#2b7fa0" stroke-width="1.5" fill="none" opacity=".6"/>
   </g>
-  <g id="quakes"></g>`;
-const QUAKES=[
-  {lon:95.9,lat:3.3,y:2004,m:9.1,n:'ACEH 2004 M9.1',dx:56,dy:6},
-  {lon:99.9,lat:-7.9,y:2009,m:7.0,n:'TASIKMALAYA 2009 M7.0',dx:-60,dy:52},
-  {lon:107.7,lat:-9.4,y:2006,m:7.7,n:'PANGANDARAN 2006 M7.7',dx:22,dy:-16},
-  {lon:112.6,lat:-10.3,y:1994,m:7.8,n:'BANYUWANGI 1994 M7.8',dx:-234,dy:-44},
-];
+  <!-- boat wireframe -->
+  <g id="boat" filter="url(#glowC)">
+    <path d="M310 330 L410 330 L385 302 L335 302 Z" stroke="#4dd8ff" stroke-width="2.5" fill="rgba(77,216,255,.06)"/>
+    <line x1="360" y1="302" x2="360" y2="240" stroke="#4dd8ff" stroke-width="2.5"/>
+    <path d="M364 246 L400 298 L364 298 Z" stroke="#4dd8ff" stroke-width="2" fill="rgba(77,216,255,.05)"/>
+    <path d="M356 250 L330 298 L356 298 Z" stroke="#ff9f43" stroke-width="2" fill="rgba(255,159,67,.07)"/>
+  </g>
+  <!-- depth plumb line + arrow -->
+  <g id="plumb" filter="url(#glowC)">
+    <line x1="360" y1="340" x2="360" y2="900" stroke="#4dd8ff" stroke-width="2" stroke-dasharray="6 8" opacity=".7"/>
+    <path d="M348 890 L360 912 L372 890 Z" fill="#4dd8ff"/>
+  </g>
+  <!-- trench floor -->
+  <g id="floor" filter="url(#glowC)">
+    <path d="M40 900 L200 900 L300 1035 L420 1035 L520 900 L680 900" stroke="#ff5252" stroke-width="3" fill="none"/>
+    <text x="360" y="1090" text-anchor="middle" font-size="22" fill="#ff5252" font-weight="800" id="floorLbl" opacity="0">PALUNG JAWA −7.192 m</text>
+  </g>
+  <!-- Semeru comparison (right, dashed) -->
+  <g id="semeru" filter="url(#glowC)">
+    <path d="M470 900 L560 660 L650 900" stroke="#ff9f43" stroke-width="2.5" fill="rgba(255,159,67,.05)"/>
+    <text x="560" y="640" text-anchor="middle" font-size="17" fill="#ff9f43" font-weight="700">SEMERU 3.676 m</text>
+  </g>
+  <!-- S2: two plates wireframe -->
+  <g id="plates" filter="url(#glowC)">
+    <path d="M60 520 L660 505 L660 585 L60 600 Z" stroke="#4dd8ff" stroke-width="2.5" fill="rgba(77,216,255,.05)"/>
+    <text x="90" y="480" font-size="17" fill="#4dd8ff" font-weight="700">LEMPENG EURASIA</text>
+    <path d="M60 760 L480 730 L600 800 L470 1000 L60 900 Z" stroke="#ff9f43" stroke-width="2.5" fill="rgba(255,159,67,.05)"/>
+    <text x="80" y="1080" font-size="17" fill="#ff9f43" font-weight="700">INDO-AUSTRALIA</text>
+    <path d="M280 745 L360 800 L300 900" stroke="#ff5252" stroke-width="2.5" fill="none" stroke-dasharray="8 7"/>
+    <g id="arrL"><rect x="80" y="1120" width="110" height="8" fill="#ff5252"/><path d="M190 1112 L220 1124 L190 1136 Z" fill="#ff5252"/></g>
+    <g id="arrR"><rect x="530" y="1120" width="110" height="8" fill="#ff5252"/><path d="M530 1112 L500 1124 L530 1136 Z" fill="#ff5252"/></g>
+  </g>
+  <!-- S3: ruler 0-100 tahun -->
+  <g id="ruler3" filter="url(#glowC)">
+    <rect x="70" y="560" width="580" height="24" stroke="#4dd8ff" stroke-width="2.5" fill="rgba(77,216,255,.05)"/>
+    <rect id="rfill" x="73" y="563" width="0" height="18" fill="rgba(77,216,255,.35)"/>
+    <path id="rmark" d="M73 528 L62 506 L84 506 Z" fill="#ff9f43"/>
+    <text x="70" y="620" font-size="16" fill="#5c728f">0 TH</text>
+    <text x="650" y="620" text-anchor="end" font-size="16" fill="#5c728f">100 TH</text>
+    <text id="yr3" x="360" y="740" text-anchor="middle" font-size="58" font-weight="900" fill="#eef4fb">0 TAHUN</text>
+    <text id="mtr3" x="360" y="820" text-anchor="middle" font-size="40" font-weight="800" fill="#4dd8ff">= 0 METER</text>
+    <g id="nail">
+      <rect x="330" y="920" width="14" height="70" rx="6" stroke="#4dd8ff" stroke-width="2" fill="rgba(77,216,255,.08)"/>
+      <rect x="322" y="912" width="30" height="14" rx="4" stroke="#4dd8ff" stroke-width="2" fill="none"/>
+      <text x="360" y="1030" text-anchor="middle" font-size="16" fill="#5c728f">kuku tumbuh 6,5 cm/th</text>
+    </g>
+  </g>
+  <!-- S4: spring + snap -->
+  <g id="spring" filter="url(#glowC)">
+    <rect x="90" y="560" width="190" height="110" stroke="#4dd8ff" stroke-width="2.5" fill="rgba(77,216,255,.05)"/>
+    <rect x="440" y="560" width="190" height="110" stroke="#ff9f43" stroke-width="2.5" fill="rgba(255,159,67,.05)"/>
+    <path id="zig" stroke="#ff5252" stroke-width="3" fill="none"/>
+    <text x="185" y="625" text-anchor="middle" font-size="16" fill="#4dd8ff" font-weight="700">TEKANAN</text>
+    <text x="535" y="625" text-anchor="middle" font-size="16" fill="#ff9f43" font-weight="700">TUMPUKAN</text>
+    <g id="waves4"></g>
+  </g>
+  <!-- S5: equation card -->
+  <g id="eq" filter="url(#glowC)">
+    <rect x="120" y="420" width="480" height="130" rx="14" stroke="#4dd8ff" stroke-width="2.5" fill="rgba(77,216,255,.06)"/>
+    <text x="360" y="478" text-anchor="middle" font-size="30" font-weight="900" fill="#eef4fb">GEMPA = <tspan fill="#ff5252">GERAKAN</tspan></text>
+    <text x="360" y="522" text-anchor="middle" font-size="19" fill="#5c728f">yang tertahan bertahun-tahun</text>
+    <text x="360" y="720" text-anchor="middle" font-size="22" fill="#eef4fb" id="eqLine2" opacity="0">Bukan <tspan fill="#ff5252" font-weight="900">KEJADIAN</tspan> yang datang tiba-tiba</text>
+  </g>
+  <!-- S6: outro -->
+  <g id="outro" filter="url(#glowC)">
+    <text x="360" y="480" text-anchor="middle" font-size="52" font-weight="900" fill="#eef4fb" id="o1" opacity="0">BUMI TIDAK <tspan fill="#4dd8ff">DIAM</tspan></text>
+    <path id="fault6" d="M120 640 L340 628 L360 636 L600 620" stroke="#ff5252" stroke-width="3" fill="none" opacity="0"/>
+  </g>`;
 
-const SCW=[[0,6.5],[6.5,14],[14,22],[22,30],[30,36],[36,40]];
-const fade=(t,i)=>Math.min(seg(t,SCW[i][0],SCW[i][0]+0.45),1-seg(t,SCW[i][1]-0.35,SCW[i][1]));
-// entering direction: tiap scene elemen masuk dari satu arah konsisten (kiri), dgn overshoot
-const slideIn=(t,a,b,fromX=-90)=>{const q=pop(seg(t,a,b));return{q,tx:lerp(fromX,0,q)};};
-
-// roll-digit counter: tiap digit bergulir saat berubah (dipakai S1 depth + S3 years)
-function rollDigits(str){
-  // monospace-ish: angka dgn tail opacity utk digit yg baru "roll"
-  return str;
+/* helpers */
+const SC=[0,3.62,4.58,6.04,9.03,12.48,17.31,18.71,23.59,26.83,29.88,32.24,35.50,38.50,39.51,DUR];
+const fade=(t,i)=>Math.min(seg(t,SC[i],SC[i]+0.4),1-seg(t,SC[i+1]-0.3,SC[i+1]));
+const fadeRange=(t,a,b)=>Math.min(seg(t,a,a+0.4),1-seg(t,b-0.3,b));
+function showCap(t,i){
+  const c=$('caption');
+  const p=seg(t,SC[i],Math.min(SC[i]+0.55,SC[i+1]-0.15));
+  const parts=CAP[i].split('|');
+  const words=parts.map(s=>s.split(' '));
+  let n=0,total=words.flat().length;
+  let html='';
+  for(let li=0;li<parts.length;li++){
+    const line=words[li].map(w=>{
+      n++;const wp=clamp((p*total-n+1),0,1);
+      return `<span style="opacity:${wp};display:inline-block;transform:translateY(${(1-wp)*12}px)">${w}</span>`;
+    }).join(' ');
+    html+=`<div>${line}</div>`;
+  }
+  c.innerHTML=html;
+  c.style.opacity=1;
+}
+function tooltip(t,i,showA,hideA,html,x,y){
+  const el=$('tooltip');
+  const p=pop(seg(t,showA,showA+0.3));
+  const q=(t>hideA)?1-pop(seg(t,hideA,hideA+0.3)):p;
+  if(p<=0){el.classList.add('hidden');return;}
+  el.classList.remove('hidden');
+  el.innerHTML=html;
+  el.style.left=x+'px';el.style.top=y+'px';
+  el.style.opacity=q;el.style.transform=`scale(${lerp(.7,1,p)})`;
+}
+function setWaves(t,base){
+  let d='M40 '+base;
+  for(let x=40;x<680;x+=80)d+=` Q${x+40} ${base-8+Math.sin(t*2+x)*3} ${x+80} ${base}`;
+  return d;
+}
+function springPath(cx1,cx2,y,comp,flip){
+  const n=8,zw=(cx2-cx1)/n;let d=`M${cx1} ${y}`;
+  for(let i=0;i<n;i++)d+=` L${cx1+zw*(i+.5)} ${y+(i%2?20:-20)*(flip?1:1)}`;
+  return d+` L${cx2} ${y}`;
 }
 
 function render(t){
-  E.grat.style.transform=`translate(${-(t*6)%72}px,${-(t*4)%72}px)`;
-  ['s1','s2','s3','s4','s5','s6'].forEach(k=>E[k].style.opacity=0);
-  let shake=0;
-  const waveShift=(t*46)%80, waveShift2=(t*80)%80;
+  ['sea','boat','plumb','floor','semeru','plates','ruler3','spring','eq','outro'].forEach(k=>{
+    const el=$(k);el.style.opacity=0;
+  });
+  $('floorLbl').style.opacity=0;$('semeru').querySelector('text').style.opacity=0;
+  $('tooltip').classList.add('hidden');
+  for(let i=0;i<15;i++)if(t>=SC[i]&&t<SC[i+1])showCap(t,Math.min(i,13));
 
-  if(t<6.5){ // S1
-    E.s1.style.opacity=fade(t,0);
-    E.s1.style.transform=`scale(${1+0.03*seg(t,0,6.5)})`;
-    const p=seg(t,1,6.2), d=Math.floor(7192*Math.pow(p,1.7));
-    $('depth').textContent=d.toLocaleString('id-ID');
-    $('rptr').setAttribute('transform',`translate(0,${(d/7192)*500})`);
-    // glints: kilau di permukaan ombak
-    let g='';
-    for(let i=0;i<7;i++){
-      const gx=((i*127+t*23)%720), gy=418+Math.sin(i*2.1)*4;
-      const gp=(Math.sin(t*3.1+i*1.7)+1)/2;
-      if(gp>0.55)g+=`<ellipse cx="${gx}" cy="${gy}" rx="${6*gp}" ry="2" fill="#ffffff" opacity="${(gp-0.55)*1.4}" filter="url(#glowW)"/>`;
-    }
-    $('glints').innerHTML=g;
-    $('boat').setAttribute('transform',`translate(${Math.sin(t*0.7)*9},${Math.sin(t*2.2)*7}) rotate(${Math.sin(t*1.7)*3+Math.sin(t*2.2)*2} 360 380)`);
-    $('waves1a').setAttribute('transform',`translate(${-waveShift},0)`);
-    $('waves1b').setAttribute('transform',`translate(${-waveShift2+40},0)`);
-    $('cloud1').setAttribute('transform',`translate(${(t*10)%720},0)`);
-    $('depth').setAttribute('fill', t>5?'#bfe0f5':'#ffffff');
+  if(t<SC[2]){ // S1a: permukaan tenang + boat
+    const o=fade(t,0);$('sea').style.opacity=o;$('boat').style.opacity=o;
+    $('sea').querySelector('path').setAttribute('d',setWaves(t,340));
+    $('boat').setAttribute('transform',`translate(${Math.sin(t*.8)*8},${Math.sin(t*2.1)*5}) rotate(${Math.sin(t*1.6)*3} 360 315)`);
   }
-  else if(t<14){ // S2
-    E.s2.style.opacity=fade(t,1);
-    const inP=ease(seg(t,6.5,7.4));
-    E.s2.style.transform=`scale(${lerp(1.1,1,inP)+0.02*seg(t,7.5,14)})`;
-    $('waves2a').setAttribute('transform',`translate(${-waveShift},0)`);
-    $('waves2b').setAttribute('transform',`translate(${-waveShift2+40},0)`);
-    const fp=seg(t,7.5,13.5);
-    $('fish').setAttribute('transform',`translate(${lerp(120,540,fp)},${470+Math.sin(t*2.4)*14}) ${fp>0.96?'scale(-1,1) translate(-870,0)':''}`);
-    let bub='';
-    for(let i=0;i<5;i++){
-      const bp=((t*0.45+i*0.2)%1);
-      bub+=`<circle cx="${362+Math.sin(bp*9+i)*14}" cy="${830-bp*330}" r="${3+bp*5}" fill="none" stroke="#efe7d3" stroke-width="2" opacity="${(1-bp)*.8}"/>`;
-    }
-    $('bubbles').innerHTML=bub;
-    $('arrL').setAttribute('transform',`translate(${(t*22)%34},0)`);
-    $('arrR').setAttribute('transform',`translate(${-(t*22)%34},0)`);
-    const labelIn=slideIn(t,7.2,7.9);
-    const pe=$('plateEur');
-    pe.style.transform=`translate(${labelIn.tx}px,0)`;
-    pe.style.opacity=fade(t,1)*labelIn.q;
+  else if(t<SC[4]){ // S1b: plumb mulai turun (segmen 3: 4.58-6.04 "Tapi di bawahnya")
+    const o=fade(t,2);$('sea').style.opacity=o;$('plumb').style.opacity=o*.9;
+    const p=ease(seg(t,SC[2],SC[3]));
+    $('plumb').querySelector('line').setAttribute('y2',340+p*663);
+    $('plumb').querySelector('path').setAttribute('transform',`translate(0,${p*545})`);
+    $('sea').querySelector('path').setAttribute('d',setWaves(t,340));
+    tooltip(t,2,SC[2]+0.35,SC[3]+0.25,'DASAR LAUT <span class="cy">−7.192 m</span>',410,800);
   }
-  else if(t<22){ // S3
-    E.s3.style.opacity=fade(t,2);
-    const intro=pop(seg(t,14,14.8));
-    E.s3.style.transform=`scale(${lerp(.94,1,intro)+0.02*seg(t,15,22)})`;
-    const years=Math.floor(100*seg(t,15.8,21));
-    $('yr').textContent=years+' tahun';
+  else if(t<SC[6]){ // S1c: plumb lanjut turun + floor + semeru (segmen 4-5: 6.04-9.03, 9.03-11.53)
+    const o=fadeRange(t,SC[3],SC[6]);   // 6.04..17.31
+    $('sea').style.opacity=o;$('plumb').style.opacity=o*.9;$('floor').style.opacity=o;
+    const p=ease(seg(t,SC[3],SC[4]-0.4));
+    $('plumb').querySelector('line').setAttribute('y2',340+p*663);
+    $('plumb').querySelector('path').setAttribute('transform',`translate(0,${p*545})`);
+    $('floorLbl').style.opacity=pop(seg(t,SC[3]+0.3,SC[4]));
+    $('sea').querySelector('path').setAttribute('d',setWaves(t,340));
+    const so=pop(seg(t,SC[4]+0.3,SC[5]-0.3));
+    $('semeru').style.opacity=so;$('semeru').querySelector('text').style.opacity=so;
+    tooltip(t,4,SC[4]+0.6,SC[5]-0.05,'LEBIH DALAM DARI <span class="cy">SEMERU</span>',180,700);
+  }
+  else if(t<SC[8]){ // S2: plates (segmen 7: 18.71-22.63)
+    const o=fade(t,7);
+    $('plates').style.opacity=o;
+    const inP=pop(seg(t,SC[6]+0.2,SC[6]+1));
+    $('plates').setAttribute('transform',`translate(${lerp(-60,0,inP)},0)`);
+    const c=(t*14)%30;
+    $('arrL').setAttribute('transform',`translate(${c},0)`);
+    $('arrR').setAttribute('transform',`translate(${-c},0)`);
+  }
+  else if(t<SC[10]){ // S3: ruler (segmen 8-9: 23.59-26.83, 26.83-28.91)
+    const o=fadeRange(t,SC[8],SC[10]);$('ruler3').style.opacity=o;
+    const years=Math.floor(100*seg(t,SC[8]+0.3,SC[9]-0.4));
+    $('rfill').setAttribute('width',years*5.8);
+    const bounce=(years%25===0&&years>0)?Math.max(0,1-(t-SC[8]-years*0.048)/0.25):0;
+    $('rmark').setAttribute('transform',`translate(${years*5.8},${-12*bounce})`);
+    $('yr3').textContent=years+' TAHUN';
     const mtr=6.5*years/100;
-    $('mtr').textContent='= '+(mtr<10?mtr.toFixed(1).replace('.',','):Math.round(mtr))+' meter';
-    $('rfill').setAttribute('width',years*6);
-    $('rmark').setAttribute('transform',`translate(${years*6},0)`);
-    // rmark bounce tiap kelipatan 25 tahun
-    const bounce=(years%25===0&&years>0)?Math.max(0,1-(t-15.8-years/100*5.2)/0.25):0;
-    $('rmark').setAttribute('transform',`translate(${years*6},${-10*bounce})`);
-    $('cmnum').setAttribute('fill', t>15.8?'#c0442e':'#1e2a38');
+    $('mtr3').textContent='= '+(mtr<10?mtr.toFixed(1).replace('.',','):Math.round(mtr))+' METER';
   }
-  else if(t<30){ // S4
-    E.s4.style.opacity=fade(t,3);
-    $('stress').style.opacity=seg(t,22,24);
-    $('b1').style.opacity=pop(seg(t,22.2,23)); $('b2').style.opacity=pop(seg(t,22.6,23.4));
-    $('b1').setAttribute('transform',`translate(0,${30*(1-pop(seg(t,22.2,23)))})`);
-    $('b2').setAttribute('transform',`translate(0,${30*(1-pop(seg(t,22.6,23.4)))})`);
-    const snap=t>26.5;
-    $('b3').style.opacity=snap?pop(seg(t,26.8,27.6)):0;
-    if(snap)$('b3').setAttribute('transform',`translate(0,${36*(1-pop(seg(t,26.8,27.6)))})`);
-    $('cap4').style.opacity=pop(seg(t,28.4,29.4));
-    // spring compression then snap
-    const st=seg(t,22,26.5);
-    const comp=lerp(120,40,st);
-    let jx=0,wob=0;
-    if(snap){ jx=(1-ease(seg(t,26.5,27.2)))*50; shake=(1-ease(seg(t,26.5,27.3)))*13; wob=Math.sin((t-26.5)*16)*8*Math.exp(-(t-26.5)*2.5); }
-    let zig=`M${280+ (snap?-jx:0)} 760`;
-    const n=8,zw=comp/n;
-    for(let i=0;i<n;i++)zig+=` L${280+(snap?-jx:0)+zw*(i+.5)} ${760+(i%2?26:-26)}`;
-    zig+=` L${440+(snap?-jx:0)} 760`;
-    let viz=`<rect x="80" y="710" width="${200-(snap?jx*0.5:0)-comp*0}" height="100" fill="#b8a276" stroke="#1e2a38" stroke-width="4" transform="translate(${snap?-jx+wob:Math.sin(t*30)*st*4},0)"/>`+
-      `<rect x="${440+(snap?jx:0)-Math.sin(t*30)*st*4}" y="710" width="200" height="100" fill="#7a6a52" stroke="#1e2a38" stroke-width="4"/>`+
-      `<path d="${zig}" stroke="#c0442e" stroke-width="5" fill="none"/>`;
+  else if(t<SC[12]){ // S4: spring (segmen 10-11: 29.88-31.29, 32.24-34.53)
+    const o=fadeRange(t,SC[10],SC[12]);$('spring').style.opacity=o;
+    const st=seg(t,SC[10],SC[11]-0.4);
+    const comp=lerp(260,120,st);
+    $('zig').setAttribute('d',springPath(280,440,615,comp));
+    const snap=t>SC[11]-1.2;
     if(snap){
+      const sp=t-(SC[11]-1.2), wob=Math.sin(sp*16)*10*Math.exp(-sp*2.5);
+      $('spring').querySelector('rect').setAttribute('transform',`translate(${-wob},0)`);
+      let w='';
       for(let i=0;i<4;i++){
-        const wp=seg(t,26.5+i*.3,29.6);
-        if(wp>0&&wp<1)viz+=`<circle cx="360" cy="760" r="${wp*700}" stroke="#c0442e" stroke-width="${4*(1-wp)+1}" fill="none" opacity="${(1-wp)*.6}"/>`;
+        const wp=seg(t,SC[11]-1.2+i*.25,SC[11]+1.5);
+        if(wp>0&&wp<1)w+=`<circle cx="360" cy="615" r="${wp*560}" stroke="#ff5252" stroke-width="${3*(1-wp)+1}" fill="none" opacity="${(1-wp)*.7}"/>`;
       }
+      $('waves4').innerHTML=w;
     }
-    $('quakeviz').innerHTML=viz;
-    $('stress').textContent=snap?'':'TEKANAN MENUMPUK'+'.'.repeat(1+Math.floor(t*2)%3);
   }
-  else if(t<36){ // S5
-    E.s5.style.opacity=fade(t,4);
-    const inP=ease(seg(t,30,30.9));
-    E.s5.style.transform=`scale(${lerp(1.09,1,inP)}) translate(${(t-30)*3}px,0)`;
-    $('h5').style.opacity=pop(seg(t,30.1,30.7));
-    $('jawa5').style.opacity=pop(seg(t,30.4,31));
-    const suIn=slideIn(t,30.9,31.6,-140);
-    $('sumatra5').style.opacity=fade(t,4)*suIn.q;
-    $('sumatra5').style.transform=`translate(${suIn.tx}px,0)`;
-    $('trench5').style.opacity=pop(seg(t,31.2,31.7));
-    $('plbl').style.opacity=pop(seg(t,31.4,31.9));
-    $('jlbl').style.opacity=pop(seg(t,30.8,31.3));
-    $('compass').style.opacity=pop(seg(t,30.6,31.2));
-    let q='';
-    QUAKES.forEach((k,i)=>{
-      const p=pop(seg(t,31.9+i*.55,32.6+i*.55));
-      if(p<=0)return;
-      const r=(10+(k.m-7)*17)*p, x=PX(k.lon), y=PY(k.lat);
-      q+=`<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="#c0442e" stroke-width="3.5"/>
-          <circle cx="${x}" cy="${y}" r="5" fill="#c0442e"/>
-          <text class="sans" x="${x+k.dx}" y="${y+k.dy}" font-size="15" fill="#c0442e" font-weight="bold">${k.n}</text>`;
-    });
-    $('quakes').innerHTML=q;
+  else if(t<SC[14]){ // S5: equation (segmen 12-13: 35.50-37.52, 38.50-39.24)
+    const o=fadeRange(t,SC[12],SC[14]);$('eq').style.opacity=o;
+    const inP=pop(seg(t,SC[12]+0.1,SC[12]+0.6));
+    $('eq').setAttribute('transform',`translate(0,${lerp(30,0,inP)})`);
+    $('eqLine2').style.opacity=pop(seg(t,SC[13]-1.4,SC[13]-0.8));
   }
-  else{ // S6
-    E.s6.style.opacity=fade(t,5);
-    const q=pop(seg(t,36.3,37.1));
-    const slam=1+.3*(1-ease(seg(t,36.3,36.9)));
-    E.s6.style.transform=`scale(${lerp(slam,1,ease(seg(t,36.9,37.6)))+0.015*seg(t,37.6,40)})`;
-    $('o1').style.opacity=q; $('o2').style.opacity=pop(seg(t,37.8,38.6));
-    $('island6').style.opacity=pop(seg(t,36.8,37.6));
-    $('island6').setAttribute('transform',`translate(0,${Math.sin(t*2)*5})`);
-    $('waves6a').setAttribute('transform',`translate(${-waveShift},0)`);
-    $('waves6b').setAttribute('transform',`translate(${-waveShift2+40},0)`);
+  else{ // S6: outro (segmen 14: 39.51-43.09)
+    const o=1; $('outro').style.opacity=1;
+    $('o1').style.opacity=pop(seg(t,SC[13]+0.3,SC[13]+1))*o;
+    const fp=seg(t,SC[13]+0.9,DUR-0.4);
+    $('fault6').style.opacity=o*fp;
+    $('fault6').setAttribute('stroke-dasharray',`${fp*560} 999`);
   }
-  E.stage.style.transform=shake?`translate(${(Math.random()*2-1)*shake}px,${(Math.random()*2-1)*shake}px)`:'';
 }
 
 const qp=new URLSearchParams(location.search);
-if(qp.has('t')){ render(parseFloat(qp.get('t'))); }
+if(qp.has('t')){render(parseFloat(qp.get('t')));}
 else{
   let t0=performance.now();
-  function loop(now){ const t=((now-t0)/1000)%DUR; render(t); requestAnimationFrame(loop); }
+  function loop(now){const t=Math.min((now-t0)/1000,DUR);render(t);requestAnimationFrame(loop);}
   requestAnimationFrame(loop);
 }
 window.__seek=t=>render(t);

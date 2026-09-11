@@ -1,10 +1,10 @@
 # QA Report — vision
 
-Model: or/inclusionai/ling-3.0-flash-vl:free
+Model: bai/glm-5.3-flash
 Frames: 6
-Issues: 0
+Issues: 2
 
-Verdict: **PASS**
+Verdict: **FAIL**
 
 ## qa/frame_03.png
 OK
@@ -13,13 +13,13 @@ OK
 OK
 
 ## qa/frame_18.png
-OK
+ISSUE: Ilustrasi HP terpotong tepi bawah frame — sudut rounded bawah tidak terlihat, bentuk terkesan keluar frame.
 
 ## qa/frame_25.png
 OK
 
 ## qa/frame_33.png
-OK
+ISSUE: Pulau kecil di tepi kanan (Bali/Lombok) terpotong tepi frame, terlihat terpotong salah.
 
 ## qa/frame_38.png
 OK
