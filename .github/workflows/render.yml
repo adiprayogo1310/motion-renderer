@@ -103,7 +103,16 @@ jobs:
         run: |
           git config user.name "actions-bot"
           git config user.email "actions@users.noreply.github.com"
+          git config rerere.enabled false
           git add out.mp4
           git commit -m "render: MP4 $(date -u +%Y-%m-%dT%H:%M)Z [skip ci]" || echo "nothing changed"
-          git pull --rebase origin main || { git rebase --abort; git pull --no-rebase origin main; }
+          git fetch origin main
+          git rebase origin/main --strategy-option=theirs || {
+            git rebase --abort
+            git rebase -X theirs $(git rev-parse origin/main) 2>/dev/null || true
+            git reset --hard origin/main
+            git checkout --ours . 2>/dev/null || true
+            git add out.mp4
+            git commit -m "render: MP4 $(date -u +%Y-%m-%dT%H:%M)Z [skip ci]"
+          }
           git push
