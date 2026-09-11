@@ -23,11 +23,11 @@ jobs:
         run: |
           pip install comfy-cli
           comfy --skip-prompt tracking disable
-          comfy --skip-prompt install --cpu --fast-deps --skip-prompt
-          comfy model download \
+          comfy install --cpu --fast-deps --skip-requirement --skip-manager --no-comfyui-manager || true
+          comfy --workspace=$HOME/comfy/ComfyUI --skip-prompt model download \
             --url "https://huggingface.co/stabilityai/sd-turbo/resolve/main/sd_turbo.safetensors" \
             --relative-path models/checkpoints
-          comfy model download \
+          comfy --workspace=$HOME/comfy/ComfyUI --skip-prompt model download \
             --url "https://huggingface.co/madebyollin/sdxl-turbo/resolve/main/sdxl_turbo.safetensors" \
             --relative-path models/checkpoints
 
