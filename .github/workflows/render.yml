@@ -80,7 +80,7 @@ jobs:
           fi
           dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$audio")
           RETIME="${{ inputs.retime }}"
-          [ -z "$RETIME" ] && RETIME="true"
+          [ -z "$RETIME" ] && RETIME="false"
           # HTML timeline sudah native VO duration -> retime=false berarti langsung mux
           if [ "$RETIME" = "false" ]; then
             ffmpeg -y -framerate "${{ inputs.fps || '30' }}" -i out/f_%05d.png -i "$audio" \
