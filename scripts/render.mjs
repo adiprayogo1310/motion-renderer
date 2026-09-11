@@ -13,6 +13,7 @@ mkdirSync(resolve(root, 'out'), { recursive: true });
 
 const browser = await puppeteer.launch({
   headless: true,
+  protocolTimeout: 180000,
   args: ['--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage', '--font-render-hinting=none'],
 });
 const page = await browser.newPage();

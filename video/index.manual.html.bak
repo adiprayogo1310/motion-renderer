@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Gunung Terbalik — Palung Jawa (hynGG style)</title>
+<style>
+  :root{
+    --bg:#0d1526; --line:#1c2a44; --cyan:#4dd8ff; --cyan-dim:#2b7fa0;
+    --fg:#eef4fb; --dim:#5c728f; --red:#ff5252; --orange:#ff9f43; --tan:#c8b78f;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:100%;height:100%;background:var(--bg);overflow:hidden;
+    font-family:'Liberation Sans','DejaVu Sans',Arial,sans-serif}
+  #stage{position:relative;width:720px;height:1280px;background:var(--bg);overflow:hidden}
+  .lyr{position:absolute;inset:0}
+  .hidden{opacity:0}
+  .tag{position:absolute;top:150px;left:40px;color:var(--dim);font-size:15px;letter-spacing:.24em}
+  .tag b{color:var(--cyan);font-weight:400}
+  .cap{position:absolute;left:0;width:100%;text-align:center;font-size:30px;font-weight:700;color:var(--fg);line-height:1.45}
+  .cap .cy{color:var(--cyan)}
+  .tt{position:absolute;padding:10px 16px;border:1.5px solid #ffffffcc;border-radius:10px;
+      font-size:20px;font-weight:700;color:var(--fg);background:rgba(13,21,38,.85);white-space:nowrap}
+  .tt .cy{color:var(--cyan)}
+  .star{position:absolute;background:#22304d;border-radius:50%}
+  #altitude{position:absolute;right:56px;top:340px;bottom:300px;width:3px;background:var(--line)}
+  .alt{position:absolute;right:36px;font-size:17px;color:var(--dim);font-weight:700}
+  .alt b{color:var(--cyan)}
+  .alt.red b{color:var(--red)}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+/* ====== timeline dari VO 43.968s — segmen dari silencedetect ====== */
+const SEG=[
+  {a:0.00, b:3.62},  {a:4.58, b:5.71},  {a:6.04, b:8.77},  {a:9.03, b:11.53},
+  {a:12.48,b:16.33}, {a:17.31,b:18.44}, {a:18.71,b:22.63}, {a:23.59,b:25.88},
+  {a:26.83,b:28.91}, {a:29.88,b:31.29}, {a:32.24,b:34.53}, {a:35.50,b:37.52},
+  {a:38.50,b:39.24}, {a:39.51,b:43.09},
+];
+const DUR=43.97;
+/* caption kata-per-kata per segmen (naskah VO) */
+const CAP=[
+  "Selatan Pulau Jawa,",          // 1
+  "permukaan laut|tampak tenang", // 2
+  "Tapi di bawahnya,",            // 3
+  "dasar laut jatuh|TUJUH RIBU METER", // 4
+  "lebih dalam dari|Gunung Semeru", // 5
+  "Di situlah Lempeng|INDO-AUSTRALIA", // 6
+  "menunjam ke bawah|Pulau Jawa", // 7
+  "Enam koma lima sentimeter|per tahun", // 8
+  "Secepat kukumu|tumbuh",        // 9
+  "Tekanan menumpuk|bertahun-tahun", // 10
+  "Saat lepas —|itulah GEMPA",    // 11
+  "Gempa bukan kejadian|Gempa = gerakan tertahan", // 12
+  "Bumi tidak|pernah diam",       // 13
+  "Kita yang jarang|merasakannya", // 14
+];
+const W=720,H=1280;
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const ease=t=>t<0?0:t>1?1:t*t*(3-2*t);
+const pop=t=>t<0?0:t>1?1:1-Math.pow(1-t,3);
+const seg=(t,a,b)=>clamp((t-a)/(b-a),0,1);
+const $=id=>document.getElementById(id);
+const stage=$('stage');
+
+/* build static DOM */
+stage.innerHTML=`
+  <div id="stars"></div>
+  <div id="depthline" style="position:absolute;right:56px;top:340px;width:3px;height:698px;background:#1c2a44"></div>
+  <div id="altlabels"></div>
+  <div class="tag">[ FAKTA BUMI ] <b>PALUNG JAWA</b></div>
+  <svg width="720" height="1280" viewBox="0 0 720 1280" style="position:absolute;left:0;top:0" id="scene"></svg>
+  <div id="tooltip" class="tt hidden"></div>
+  <div id="caption" class="cap" style="bottom:210px"></div>
+  <div id="logo" style="position:absolute;top:36px;left:36px;display:flex;align-items:center;gap:10px">
+    <div style="width:40px;height:40px;border-radius:50%;background:#ff5252;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:16px">G</div>
+    <div style="font-weight:900;color:#fff;font-size:19px">FAKTA<span style="color:var(--cyan)">GEO</span></div>
+  </div>`;
+$('stars').innerHTML=Array.from({length:42},(_,i)=>
+  `<div class="star" style="left:${(i*173)%700}px;top:${(i*257)%1240}px;width:${2+(i%3)}px;height:${2+(i%3)}px;opacity:${.3+(i%5)*.12}"></div>`).join('');
+$('altlabels').innerHTML=`
+  <div class="alt" style="top:330px">0 <b>m</b></div>
+  <div class="alt" style="top:510px">−2.000 <b>m</b></div>
+  <div class="alt" style="top:700px">−4.000 <b>m</b></div>
+  <div class="alt" style="top:890px">−6.000 <b>m</b></div>
+  <div class="alt red" style="top:1035px" id="alt7000">−7.192 <b>m</b></div>`;
+
+const scene=$('scene');
+/* wireframe elements (hynGG style) */
+scene.innerHTML=`
+  <defs>
+    <filter id="glowC" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- S1: permukaan laut wireframe -->
+  <g id="sea" filter="url(#glowC)">
+    <path d="M40 340 Q120 332 200 340 T360 340 T520 340 T680 340" stroke="#4dd8ff" stroke-width="2.5" fill="none"/>
+    <path d="M40 352 Q120 346 200 352 T360 352 T520 352 T680 352" stroke="#2b7fa0" stroke-width="1.5" fill="none" opacity=".6"/>
+  </g>
+  <!-- boat wireframe -->
+  <g id="boat" filter="url(#glowC)">
+    <path d="M310 330 L410 330 L385 302 L335 302 Z" stroke="#4dd8ff" stroke-width="2.5" fill="rgba(77,216,255,.06)"/>
+    <line x1="360" y1="302" x2="360" y2="240" stroke="#4dd8ff" stroke-width="2.5"/>
+    <path d="M364 246 L400 298 L364 298 Z" stroke="#4dd8ff" stroke-width="2" fill="rgba(77,216,255,.05)"/>
+    <path d="M356 250 L330 298 L356 298 Z" stroke="#ff9f43" stroke-width="2" fill="rgba(255,159,67,.07)"/>
+  </g>
+  <!-- depth plumb line + arrow -->
+  <g id="plumb" filter="url(#glowC)">
+    <line x1="360" y1="340" x2="360" y2="900" stroke="#4dd8ff" stroke-width="2" stroke-dasharray="6 8" opacity=".7"/>
+    <path d="M348 890 L360 912 L372 890 Z" fill="#4dd8ff"/>
+  </g>
+  <!-- trench floor -->
+  <g id="floor" filter="url(#glowC)">
+    <path d="M40 900 L200 900 L300 1035 L420 1035 L520 900 L680 900" stroke="#ff5252" stroke-width="3" fill="none"/>
+    <text x="360" y="1090" text-anchor="middle" font-size="22" fill="#ff5252" font-weight="800" id="floorLbl" opacity="0">PALUNG JAWA −7.192 m</text>
+  </g>
+  <!-- Semeru comparison (on land surface, left side; kaki di y=340 = permukaan) -->
+  <g id="semeru" filter="url(#glowC)">
+    <path d="M110 340 L200 92 L290 340" stroke="#ff9f43" stroke-width="2.5" fill="rgba(255,159,67,.05)"/>
+    <text x="200" y="70" text-anchor="middle" font-size="17" fill="#ff9f43" font-weight="700">SEMERU 3.676 m</text>
+  </g>
+  <!-- S2: two plates wireframe -->
+  <g id="plates" filter="url(#glowC)">
+    <path d="M60 520 L660 505 L660 585 L60 600 Z" stroke="#4dd8ff" stroke-width="2.5" fill="rgba(77,216,255,.05)"/>
+    <text x="90" y="480" font-size="17" fill="#4dd8ff" font-weight="700">LEMPENG EURASIA</text>
+    <path d="M60 760 L480 730 L600 800 L470 1000 L60 900 Z" stroke="#ff9f43" stroke-width="2.5" fill="rgba(255,159,67,.05)"/>
+    <text x="80" y="1058" font-size="17" fill="#ff9f43" font-weight="700">INDO-AUSTRALIA</text>
+    <path d="M280 745 L360 800 L300 900" stroke="#ff5252" stroke-width="2.5" fill="none" stroke-dasharray="8 7"/>
+    <g id="arrL"><rect x="80" y="1120" width="110" height="8" fill="#ff5252"/><path d="M190 1112 L220 1124 L190 1136 Z" fill="#ff5252"/></g>
+    <g id="arrR"><rect x="530" y="1120" width="110" height="8" fill="#ff5252"/><path d="M530 1112 L500 1124 L530 1136 Z" fill="#ff5252"/></g>
+  </g>
+  <!-- S3: ruler 0-100 tahun -->
+  <g id="ruler3" filter="url(#glowC)">
+    <rect x="70" y="560" width="580" height="24" stroke="#4dd8ff" stroke-width="2.5" fill="rgba(77,216,255,.05)"/>
+    <rect id="rfill" x="73" y="563" width="0" height="18" fill="rgba(77,216,255,.35)"/>
+    <path id="rmark" d="M73 528 L62 506 L84 506 Z" fill="#ff9f43"/>
+    <text x="70" y="620" font-size="16" fill="#5c728f">0 TH</text>
+    <text x="650" y="620" text-anchor="end" font-size="16" fill="#5c728f">100 TH</text>
+    <text id="yr3" x="360" y="740" text-anchor="middle" font-size="58" font-weight="900" fill="#eef4fb">0 TAHUN</text>
+    <text id="mtr3" x="360" y="820" text-anchor="middle" font-size="40" font-weight="800" fill="#4dd8ff">= 0 METER</text>
+    <g id="nail">
+      <rect x="330" y="920" width="14" height="70" rx="6" stroke="#4dd8ff" stroke-width="2" fill="rgba(77,216,255,.08)"/>
+      <rect x="322" y="912" width="30" height="14" rx="4" stroke="#4dd8ff" stroke-width="2" fill="none"/>
+      <text x="360" y="1055" text-anchor="middle" font-size="16" fill="#5c728f">kuku tumbuh 6,5 cm/th</text>
+    </g>
+  </g>
+  <!-- S4: spring + snap -->
+  <g id="spring" filter="url(#glowC)">
+    <rect x="90" y="560" width="190" height="110" stroke="#4dd8ff" stroke-width="2.5" fill="rgba(77,216,255,.05)"/>
+    <rect x="440" y="560" width="190" height="110" stroke="#ff9f43" stroke-width="2.5" fill="rgba(255,159,67,.05)"/>
+    <path id="zig" stroke="#ff5252" stroke-width="3" fill="none"/>
+    <text x="185" y="625" text-anchor="middle" font-size="16" fill="#4dd8ff" font-weight="700">TEKANAN</text>
+    <text x="535" y="625" text-anchor="middle" font-size="16" fill="#ff9f43" font-weight="700">TUMPUKAN</text>
+    <g id="waves4"></g>
+  </g>
+  <!-- S5: equation card -->
+  <g id="eq" filter="url(#glowC)">
+    <rect x="120" y="420" width="480" height="130" rx="14" stroke="#4dd8ff" stroke-width="2.5" fill="rgba(77,216,255,.06)"/>
+    <text x="360" y="478" text-anchor="middle" font-size="30" font-weight="900" fill="#eef4fb">GEMPA = <tspan fill="#ff5252">GERAKAN</tspan></text>
+    <text x="360" y="522" text-anchor="middle" font-size="19" fill="#8fa4bd">yang tertahan bertahun-tahun</text>
+    <text x="360" y="720" text-anchor="middle" font-size="22" fill="#eef4fb" id="eqLine2" opacity="0">Bukan <tspan fill="#ff5252" font-weight="900">KEJADIAN</tspan> yang datang tiba-tiba</text>
+  </g>
+  <!-- S6: outro -->
+  <g id="outro" filter="url(#glowC)">
+    <text x="360" y="480" text-anchor="middle" font-size="52" font-weight="900" fill="#eef4fb" id="o1" opacity="0">BUMI TIDAK <tspan fill="#4dd8ff">DIAM</tspan></text>
+    <path id="fault6" d="M120 640 L340 628 L360 636 L600 620" stroke="#ff5252" stroke-width="3" fill="none" opacity="0"/>
+  </g>`;
+
+/* helpers */
+const SC=[0,3.62,4.58,6.04,9.03,12.48,17.31,18.71,23.59,26.83,29.88,32.24,35.50,38.50,39.51,DUR];
+const fade=(t,i)=>Math.min(seg(t,SC[i],SC[i]+0.4),1-seg(t,SC[i+1]-0.3,SC[i+1]));
+const fadeRange=(t,a,b)=>Math.min(seg(t,a,a+0.4),1-seg(t,b-0.3,b));
+function showCap(t,i){
+  const c=$('caption');
+  const p=seg(t,SC[i],Math.min(SC[i]+0.55,SC[i+1]-0.15));
+  const parts=CAP[i].split('|');
+  const words=parts.map(s=>s.split(' '));
+  let n=0,total=words.flat().length;
+  let html='';
+  for(let li=0;li<parts.length;li++){
+    const line=words[li].map(w=>{
+      n++;const wp=clamp((p*total-n+1),0,1);
+      return `<span style="opacity:${wp};display:inline-block;transform:translateY(${(1-wp)*12}px)">${w}</span>`;
+    }).join(' ');
+    html+=`<div>${line}</div>`;
+  }
+  c.innerHTML=html;
+  c.style.opacity=1;
+}
+function tooltip(t,i,showA,hideA,html,x,y){
+  const el=$('tooltip');
+  const p=pop(seg(t,showA,showA+0.3));
+  const q=(t>hideA)?1-pop(seg(t,hideA,hideA+0.3)):p;
+  if(p<=0){el.classList.add('hidden');return;}
+  el.classList.remove('hidden');
+  el.innerHTML=html;
+  el.style.left=x+'px';el.style.top=y+'px';
+  el.style.opacity=q;el.style.transform=`scale(${lerp(.7,1,p)})`;
+}
+function setWaves(t,base){
+  let d='M40 '+base;
+  for(let x=40;x<680;x+=80)d+=` Q${x+40} ${base-8+Math.sin(t*2+x)*3} ${x+80} ${base}`;
+  return d;
+}
+function springPath(cx1,cx2,y,comp,flip){
+  const n=8,zw=(cx2-cx1)/n;let d=`M${cx1} ${y}`;
+  for(let i=0;i<n;i++)d+=` L${cx1+zw*(i+.5)} ${y+(i%2?20:-20)*(flip?1:1)}`;
+  return d+` L${cx2} ${y}`;
+}
+
+function render(t){
+  ['sea','boat','plumb','floor','semeru','plates','ruler3','spring','eq','outro'].forEach(k=>{
+    const el=$(k);el.style.opacity=0;
+  });
+  $('floorLbl').style.opacity=0;$('semeru').querySelector('text').style.opacity=0;
+  $('tooltip').classList.add('hidden');
+  for(let i=0;i<15;i++)if(t>=SC[i]&&t<SC[i+1])showCap(t,Math.min(i,13));
+
+  if(t<SC[2]){ // S1a: permukaan tenang + boat
+    const o=fade(t,0);$('sea').style.opacity=o;$('boat').style.opacity=o;
+    $('sea').querySelector('path').setAttribute('d',setWaves(t,340));
+    $('boat').setAttribute('transform',`translate(${Math.sin(t*.8)*8},${Math.sin(t*2.1)*5}) rotate(${Math.sin(t*1.6)*3} 360 315)`);
+  }
+  else if(t<SC[4]){ // S1b: plumb mulai turun (segmen 3: 4.58-6.04 "Tapi di bawahnya")
+    const o=fade(t,2);$('sea').style.opacity=o;$('plumb').style.opacity=o*.9;
+    const p=ease(seg(t,SC[2],SC[3]));
+    $('plumb').querySelector('line').setAttribute('y2',340+p*663);
+    $('plumb').querySelector('path').setAttribute('transform',`translate(0,${p*545})`);
+    $('sea').querySelector('path').setAttribute('d',setWaves(t,340));
+    tooltip(t,2,SC[2]+0.35,SC[3]+0.25,'DASAR LAUT <span class="cy">−7.192 m</span>',410,800);
+  }
+  else if(t<SC[6]){ // S1c: plumb lanjut turun + floor + semeru (segmen 4-5: 6.04-9.03, 9.03-11.53)
+    const o=fadeRange(t,SC[3],SC[6]);   // 6.04..17.31
+    $('sea').style.opacity=o;$('plumb').style.opacity=o*.9;$('floor').style.opacity=o;
+    const p=ease(seg(t,SC[3],SC[4]-0.4));
+    $('plumb').querySelector('line').setAttribute('y2',340+p*663);
+    $('plumb').querySelector('path').setAttribute('transform',`translate(0,${p*545})`);
+    $('floorLbl').style.opacity=pop(seg(t,SC[3]+0.3,SC[4]));
+    $('sea').querySelector('path').setAttribute('d',setWaves(t,340));
+    const so=pop(seg(t,SC[4]+0.3,SC[5]-0.3));
+    $('semeru').style.opacity=so;$('semeru').querySelector('text').style.opacity=so;
+    tooltip(t,4,SC[4]+0.6,SC[5]-0.05,'LEBIH DALAM DARI <span class="cy">SEMERU</span>',330,640);
+  }
+  else if(t<SC[8]){ // S2: plates (segmen 7: 18.71-22.63)
+    const o=fade(t,7);
+    $('plates').style.opacity=o;
+    const inP=pop(seg(t,SC[6]+0.2,SC[6]+1));
+    $('plates').setAttribute('transform',`translate(${lerp(-60,0,inP)},0)`);
+    const c=(t*14)%30;
+    $('arrL').setAttribute('transform',`translate(${c},0)`);
+    $('arrR').setAttribute('transform',`translate(${-c},0)`);
+  }
+  else if(t<SC[10]){ // S3: ruler (segmen 8-9: 23.59-26.83, 26.83-28.91)
+    const o=fadeRange(t,SC[8],SC[10]);$('ruler3').style.opacity=o;
+    const years=Math.floor(100*seg(t,SC[8]+0.3,SC[9]-0.4));
+    $('rfill').setAttribute('width',years*5.8);
+    const bounce=(years%25===0&&years>0)?Math.max(0,1-(t-SC[8]-years*0.048)/0.25):0;
+    $('rmark').setAttribute('transform',`translate(${years*5.8},${-12*bounce})`);
+    $('yr3').textContent=years+' TAHUN';
+    const mtr=6.5*years/100;
+    $('mtr3').textContent='= '+(mtr<10?mtr.toFixed(1).replace('.',','):Math.round(mtr))+' METER';
+  }
+  else if(t<SC[12]){ // S4: spring (segmen 10-11: 29.88-31.29, 32.24-34.53)
+    const o=fadeRange(t,SC[10],SC[12]);$('spring').style.opacity=o;
+    const st=seg(t,SC[10],SC[11]-0.4);
+    const comp=lerp(260,120,st);
+    $('zig').setAttribute('d',springPath(280,440,615,comp));
+    const snap=t>SC[11]-1.2;
+    if(snap){
+      const sp=t-(SC[11]-1.2), wob=Math.sin(sp*16)*10*Math.exp(-sp*2.5);
+      $('spring').querySelector('rect').setAttribute('transform',`translate(${-wob},0)`);
+      let w='';
+      for(let i=0;i<4;i++){
+        const wp=seg(t,SC[11]-1.2+i*.25,SC[11]+1.5);
+        if(wp>0&&wp<1)w+=`<circle cx="360" cy="615" r="${wp*560}" stroke="#ff5252" stroke-width="${3*(1-wp)+1}" fill="none" opacity="${(1-wp)*.7}"/>`;
+      }
+      $('waves4').innerHTML=w;
+    }
+  }
+  else if(t<SC[14]){ // S5: equation (segmen 12-13: 35.50-37.52, 38.50-39.24)
+    const o=fadeRange(t,SC[12],SC[14]);$('eq').style.opacity=o;
+    const inP=pop(seg(t,SC[12]+0.1,SC[12]+0.6));
+    $('eq').setAttribute('transform',`translate(0,${lerp(30,0,inP)})`);
+    $('eqLine2').style.opacity=pop(seg(t,SC[13]-1.4,SC[13]-0.8));
+  }
+  else{ // S6: outro (segmen 14: 39.51-43.09)
+    const o=1; $('outro').style.opacity=1;
+    $('o1').style.opacity=pop(seg(t,SC[13]+0.3,SC[13]+1))*o;
+    const fp=seg(t,SC[13]+0.9,DUR-0.4);
+    $('fault6').style.opacity=o*fp;
+    $('fault6').setAttribute('stroke-dasharray',`${fp*560} 999`);
+  }
+}
+
+const qp=new URLSearchParams(location.search);
+if(qp.has('t')){render(parseFloat(qp.get('t')));}
+else{
+  let t0=performance.now();
+  function loop(now){const t=Math.min((now-t0)/1000,DUR);render(t);requestAnimationFrame(loop);}
+  requestAnimationFrame(loop);
+}
+window.__seek=t=>render(t);
+</script>
+</body>
+</html>

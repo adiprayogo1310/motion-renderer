@@ -1,10 +1,98 @@
-<!DOCTYPE html>
+#!/usr/bin/env python3
+"""build.mjs counterpart: baca specs/<slug>.json + timing VO (silencedetect) ->
+generate video/index.html dari template per visual-type.
+
+Usage: python3 scripts/build.py <slug>
+Output: video/index.html (siap dirender render.mjs)
+"""
+import json, re, subprocess, sys, os
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+def vo_segments(path):
+    """silencedetect -> daftar segmen suara [a,b]."""
+    out = subprocess.run(
+        ["ffmpeg", "-i", path, "-af", "silencedetect=noise=-40dB:d=0.12", "-f", "null", "-"],
+        capture_output=True, text=True).stderr
+    starts = [float(m) for m in re.findall(r"silence_start: ([\d.]+)", out)]
+    ends = [float(m) for m in re.findall(r"silence_end: ([\d.]+)", out)]
+    dur = float(re.findall(r"time=(\d+:\d+:[\d.]+)", out)[-1].split(":")[-1]) if "time=" in out else 0
+    if not ends or ends[-1] < starts[-1]:
+        ends.append(dur)
+    segs, prev = [], 0.0
+    for s, e in zip(starts, ends):
+        if s - prev > 0.1:
+            segs.append([round(prev, 2), round(s, 2)])
+        prev = e
+    if dur - prev > 0.1:
+        segs.append([round(prev, 2), round(dur, 2)])
+    return segs, round(dur, 2)
+
+def main():
+    slug = sys.argv[1]
+    spec = json.load(open(f"{ROOT}/specs/{slug}.json"))
+    vo_path = os.path.join(ROOT, spec["vo"])
+    if not os.path.exists(vo_path):
+        sys.exit(f"VO tidak ada: {vo_path} — push/paste dulu audionya.")
+    segs, dur = vo_segments(vo_path)
+    scenes = spec["scenes"]
+    if len(segs) != len(scenes):
+        print(f"WARN: {len(segs)} segmen suara vs {len(scenes)} scene di spec — "
+              f"pausing antara segmen menyatu/menipis. Mapping berurutan tetap dipakai.")
+    # mapping: scene i -> segmen i (berurutan); kelebihan segmen digabung ke scene terakhir
+    sc_bounds = []
+    # gabung segmen yang lebih banyak dari scene: segmen ekstra menempel ke scene terakhir yang cocok
+    n_s, n_g = len(scenes), len(segs)
+    if n_g < n_s:
+        sys.exit(f"ERROR: segmen suara ({n_g}) lebih sedikit dari scene ({n_s}) — pecah caption di spec.")
+    # distribusi proporsional: scene i dapat gap_count[i] segmen
+    base = n_g // n_s
+    extra = n_g % n_s
+    counts = [base + (1 if i < extra else 0) for i in range(n_s)]
+    gi = 0
+    for i, c in enumerate(counts):
+        a = segs[gi][0]
+        b = segs[gi + c - 1][1]
+        sc_bounds.append([a, b])
+        gi += c
+
+    T = spec["theme"]
+    brand = spec["brand"]
+    cap_lines = json.dumps([s["caption"] for s in scenes], ensure_ascii=False)
+    scenes_js = json.dumps(scenes, ensure_ascii=False)
+    bounds_js = json.dumps(sc_bounds)
+
+    html = TEMPLATE
+    kicker = spec.get("kicker", "PALUNG JAWA")
+    html = html.replace("__KICKER__", kicker)
+    html = html.replace("__TITLE__", f"{brand['name']}{brand['accent']} — {spec.get('kicker','')}")
+    html = html.replace("__BG__", T["bg"])
+    html = html.replace("__LINE__", T["line"])
+    html = html.replace("__CYAN__", T["cyan"])
+    html = html.replace("__RED__", T["red"])
+    html = html.replace("__ORANGE__", T["orange"])
+    html = html.replace("__FG__", T["fg"])
+    html = html.replace("__DIM__", T["dim"])
+    html = html.replace("__NAME__", brand["name"])
+    html = html.replace("__ACCENT__", brand["accent"])
+    html = html.replace("__DOT__", brand["dot"])
+    html = html.replace("__THEME__", json.dumps(T))
+    html = html.replace("__BRAND__", json.dumps(brand))
+    html = html.replace("__SCENES__", scenes_js)
+    html = html.replace("__BOUNDS__", bounds_js)
+    html = html.replace("__CAPS__", cap_lines)
+    html = html.replace("__DUR__", str(dur))
+    out = f"{ROOT}/video/index.html"
+    open(out, "w").write(html)
+    print(f"built {out}: {len(scenes)} scenes, DUR={dur}s dari {spec['vo']}")
+
+TEMPLATE = r"""<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>FAKTAGEO — PALUNG JAWA</title>
+<title>__TITLE__</title>
 <style>
-  :root{--bg:#0d1526;--line:#1c2a44;--cyan:#4dd8ff;--red:#ff5252;--orange:#ff9f43;--fg:#eef4fb;--dim:#5c728f}
+  :root{--bg:__BG__;--line:__LINE__;--cyan:__CYAN__;--red:__RED__;--orange:__ORANGE__;--fg:__FG__;--dim:__DIM__}
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{width:100%;height:100%;background:var(--bg);overflow:hidden;
     font-family:'Liberation Sans','DejaVu Sans',Arial,sans-serif}
@@ -25,20 +113,20 @@
   <div id="stars"></div>
   <div id="depthline" style="position:absolute;right:56px;top:340px;width:3px;height:698px;background:var(--line)"></div>
   <div id="altlabels"></div>
-  <div class="tag">[ FAKTA BUMI ] <b>PALUNG JAWA</b></div>
+  <div class="tag">[ FAKTA BUMI ] <b>__KICKER__</b></div>
   <svg width="720" height="1280" viewBox="0 0 720 1280" style="position:absolute;left:0;top:0" id="scene"></svg>
   <div id="tooltip" class="tt hidden"></div>
   <div id="caption" class="cap" style="bottom:210px"></div>
   <div id="logo" style="position:absolute;top:36px;left:36px;display:flex;align-items:center;gap:10px">
-    <div style="width:40px;height:40px;border-radius:50%;background:#ff5252;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:16px">G</div>
-    <div style="font-weight:900;color:#fff;font-size:19px">FAKTA<span style="color:var(--cyan)">GEO</span></div>
+    <div style="width:40px;height:40px;border-radius:50%;background:__DOT__;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:16px">G</div>
+    <div style="font-weight:900;color:#fff;font-size:19px">__NAME__<span style="color:var(--cyan)">__ACCENT__</span></div>
   </div>
 </div>
 <script>
-const SPEC=[{"id": "intro", "caption": "Selatan Pulau Jawa,", "visual": {"type": "boat"}}, {"id": "surface", "caption": "permukaan laut|tampak tenang.", "visual": {"type": "boat"}}, {"id": "plumb", "caption": "Tapi di bawahnya,", "visual": {"type": "plumb"}}, {"id": "depth", "caption": "dasar laut jatuh|sampai TUJUH RIBU METER.", "visual": {"type": "floor", "depth": -7192, "label": "PALUNG JAWA −7.192 m"}}, {"id": "semeru", "caption": "Lebih dalam dari|Gunung Semeru.", "visual": {"type": "compare", "mountain": {"label": "SEMERU 3.676 m"}}, "tooltip": {"text": "LEBIH DALAM DARI <cy>SEMERU</cy>", "x": 330, "y": 640}}, {"id": "plates", "caption": "Di situlah Lempeng|INDO-AUSTRALIA", "visual": {"type": "plates"}}, {"id": "subduct", "caption": "menunjam ke bawah|Pulau Jawa.", "visual": {"type": "plates", "highlight": "subduction"}}, {"id": "rate", "caption": "Enam koma lima sentimeter|per tahun.", "visual": {"type": "rate", "cm": 6.5}}, {"id": "nail", "caption": "Secepat kukumu|tumbuh.", "visual": {"type": "rate", "cm": 6.5, "analogy": "nail"}}, {"id": "pressure", "caption": "Tekanan menumpuk|bertahun-tahun.", "visual": {"type": "spring", "build": true}}, {"id": "snap-word", "caption": "Saat lepas —", "visual": {"type": "spring", "snap": true}}, {"id": "snap-gempa", "caption": "itulah GEMPA.", "visual": {"type": "spring", "snap": true}}, {"id": "equation", "caption": "Gempa bukan kejadian|Gempa = gerakan tertahan.", "visual": {"type": "equation", "a": "GEMPA", "b": "GERAKAN TERTAHAN"}}, {"id": "not-event", "caption": "Bukan kejadian yang|datang tiba-tiba.", "visual": {"type": "equation", "negate": true}}, {"id": "earth-moves", "caption": "Bumi tidak pernah|diam.", "visual": {"type": "outro", "title": "BUMI TIDAK <cy>DIAM</cy>"}}, {"id": "closing", "caption": "Kita yang jarang|merasakannya.", "visual": {"type": "outro", "fault": true}}];
-const BOUNDS=[[0.2, 1.61], [1.82, 3.63], [4.58, 5.71], [6.04, 8.77], [9.03, 11.53], [12.48, 16.34], [17.3, 18.45], [18.71, 20.81], [21.04, 22.63], [23.59, 25.89], [26.83, 28.91], [29.88, 31.29], [32.24, 34.54], [35.5, 37.53], [38.5, 39.25], [39.51, 43.09]];
-const CAPS=["Selatan Pulau Jawa,", "permukaan laut|tampak tenang.", "Tapi di bawahnya,", "dasar laut jatuh|sampai TUJUH RIBU METER.", "Lebih dalam dari|Gunung Semeru.", "Di situlah Lempeng|INDO-AUSTRALIA", "menunjam ke bawah|Pulau Jawa.", "Enam koma lima sentimeter|per tahun.", "Secepat kukumu|tumbuh.", "Tekanan menumpuk|bertahun-tahun.", "Saat lepas —", "itulah GEMPA.", "Gempa bukan kejadian|Gempa = gerakan tertahan.", "Bukan kejadian yang|datang tiba-tiba.", "Bumi tidak pernah|diam.", "Kita yang jarang|merasakannya."];
-const DUR=43.96;
+const SPEC=__SCENES__;
+const BOUNDS=__BOUNDS__;
+const CAPS=__CAPS__;
+const DUR=__DUR__;
 const W=720,H=1280;
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const lerp=(a,b,t)=>a+(b-a)*t;
@@ -238,4 +326,7 @@ else{let t0=performance.now();
 window.__seek=t=>render(t);
 </script>
 </body>
-</html>
+</html>"""
+
+if __name__=="__main__":
+    main()

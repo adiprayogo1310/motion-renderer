@@ -1,0 +1,33 @@
+{
+  "slug": "gunung-terbalik",
+  "kicker": "PALUNG JAWA",
+  "brand": { "name": "FAKTA", "accent": "GEO", "dot": "#ff5252" },
+  "theme": {
+    "bg": "#0d1526",
+    "line": "#1c2a44",
+    "cyan": "#4dd8ff",
+    "red": "#ff5252",
+    "orange": "#ff9f43",
+    "fg": "#eef4fb",
+    "dim": "#5c728f"
+  },
+  "vo": "vo/voiceover-gunung-terbalik.mp3",
+  "scenes": [
+    { "id": "intro",      "caption": "Selatan Pulau Jawa,",              "visual": { "type": "boat" } },
+    { "id": "surface",    "caption": "permukaan laut|tampak tenang.",    "visual": { "type": "boat" } },
+    { "id": "plumb",      "caption": "Tapi di bawahnya,",                "visual": { "type": "plumb" } },
+    { "id": "depth",      "caption": "dasar laut jatuh|sampai TUJUH RIBU METER.", "visual": { "type": "floor", "depth": -7192, "label": "PALUNG JAWA −7.192 m" } },
+    { "id": "semeru",     "caption": "Lebih dalam dari|Gunung Semeru.",  "visual": { "type": "compare", "mountain": { "label": "SEMERU 3.676 m" } }, "tooltip": { "text": "LEBIH DALAM DARI <cy>SEMERU</cy>", "x": 330, "y": 640 } },
+    { "id": "plates",     "caption": "Di situlah Lempeng|INDO-AUSTRALIA","visual": { "type": "plates" } },
+    { "id": "subduct",    "caption": "menunjam ke bawah|Pulau Jawa.",    "visual": { "type": "plates", "highlight": "subduction" } },
+    { "id": "rate",       "caption": "Enam koma lima sentimeter|per tahun.", "visual": { "type": "rate", "cm": 6.5 } },
+    { "id": "nail",       "caption": "Secepat kukumu|tumbuh.",           "visual": { "type": "rate", "cm": 6.5, "analogy": "nail" } },
+    { "id": "pressure",   "caption": "Tekanan menumpuk|bertahun-tahun.", "visual": { "type": "spring", "build": true } },
+    { "id": "snap-word",  "caption": "Saat lepas —",                     "visual": { "type": "spring", "snap": true } },
+    { "id": "snap-gempa", "caption": "itulah GEMPA.",                    "visual": { "type": "spring", "snap": true } },
+    { "id": "equation",   "caption": "Gempa bukan kejadian|Gempa = gerakan tertahan.", "visual": { "type": "equation", "a": "GEMPA", "b": "GERAKAN TERTAHAN" } },
+    { "id": "not-event",  "caption": "Bukan kejadian yang|datang tiba-tiba.", "visual": { "type": "equation", "negate": true } },
+    { "id": "earth-moves","caption": "Bumi tidak pernah|diam.",          "visual": { "type": "outro", "title": "BUMI TIDAK <cy>DIAM</cy>" } },
+    { "id": "closing",    "caption": "Kita yang jarang|merasakannya.",   "visual": { "type": "outro", "fault": true } }
+  ]
+}
