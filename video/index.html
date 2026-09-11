@@ -35,6 +35,12 @@
   <div class="lyr" id="s1">
     <div class="tag">[ FAKTA BUMI ] <b>01/06</b></div>
     <svg width="720" height="1280" viewBox="0 0 720 1280" id="svg1">
+    <defs>
+      <filter id="glowW" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="2.2" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
       <circle cx="600" cy="180" r="46" fill="#d9a441" opacity=".85"/>
       <g id="cloud1"><ellipse cx="180" cy="170" rx="52" ry="16" fill="#e2d9c2"/><ellipse cx="230" cy="160" rx="40" ry="13" fill="#e2d9c2"/></g>
       <text x="360" y="120" text-anchor="middle" font-size="34" letter-spacing="10" class="sans" fill="#1e2a38" font-weight="bold">SELATAN JAWA</text>
@@ -57,6 +63,7 @@
       </g>
       <text id="depth" x="240" y="700" font-size="104" font-weight="700" fill="#ffffff" font-variant-numeric="tabular-nums">0</text>
       <text x="240" y="760" font-size="30" class="sans" fill="#cfe3f2">meter di bawah laut</text>
+      <g id="glints"></g>
       <text class="cap" x="320" y="1180" text-anchor="middle" font-size="20">dasarnya lebih dalam daripada Semeru tingginya</text>
     </svg>
   </div>
@@ -65,15 +72,24 @@
   <div class="lyr hidden" id="s2">
     <div class="tag">[ POTONGAN BUMI ] <b>02/06</b></div>
     <svg width="720" height="1280" viewBox="0 0 720 1280" id="svg2">
+    <defs>
+      <filter id="cutShadow" x="-30%" y="-30%" width="160%" height="160%">
+        <feDropShadow dx="0" dy="7" stdDeviation="0" flood-color="#1e2a38" flood-opacity="0.35"/>
+      </filter>
+      <filter id="paperEdge">
+        <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" result="n"/>
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="6"/>
+      </filter>
+    </defs>
       <rect x="0" y="300" width="720" height="140" fill="#3a7ca5"/>
       <g id="waves2"></g>
       <!-- Eurasia plate -->
-      <path d="M0 540 L720 495 L720 790 L0 830 Z" fill="#b8a276" stroke="#1e2a38" stroke-width="4"/>
+      <path d="M0 540 L720 495 L720 790 L0 830 Z" fill="#b8a276" stroke="#1e2a38" stroke-width="4" filter="url(#paperEdge)" id="plateEur"/>
       <!-- strata -->
       <path d="M0 640 L720 600 L720 640 L0 685 Z" fill="#a08a60" opacity=".7"/>
       <path d="M0 730 L720 695 L720 725 L0 762 Z" fill="#8a744e" opacity=".6"/>
       <!-- Indo-Australia slab diving -->
-      <path d="M0 880 L520 850 L640 940 L540 1130 L0 1030 Z" fill="#7a6a52" stroke="#1e2a38" stroke-width="4"/>
+      <path d="M0 880 L520 850 L640 940 L540 1130 L0 1030 Z" fill="#7a6a52" stroke="#1e2a38" stroke-width="4" filter="url(#cutShadow)"/>
       <path d="M0 960 L470 935 L560 1000 L480 1090 L0 1000 Z" fill="#665540" opacity=".7"/>
       <!-- trench notch + dashed marker -->
       <path d="M340 845 Q360 880 380 842" stroke="#1e2a38" stroke-width="4" fill="none"/>
@@ -153,8 +169,13 @@
       <text x="360" y="420" text-anchor="middle" font-size="70" font-weight="700" fill="#1e2a38" id="o1" opacity="0">BUMI TIDAK DIAM<tspan fill="#c0442e">.</tspan></text>
       <text x="360" y="560" text-anchor="middle" font-size="26" font-style="italic" fill="#8a7f6a" id="o2" opacity="0">kita yang jarang merasakannya</text>
       <g id="island6" opacity="0">
-        <path d="M160 700 Q250 660 360 680 Q480 700 560 690 Q600 685 610 700 Q500 730 360 725 Q230 722 160 700 Z" fill="#c8b78f" stroke="#1e2a38" stroke-width="3"/>
-        <path d="M340 680 L352 610 L392 622 Q370 640 386 672 Z" fill="#7a6a52" stroke="#1e2a38" stroke-width="2.5"/>
+        <path d="M170 878 Q210 760 330 758 Q450 760 540 752 Q600 748 628 770 Q560 880 400 890 Q260 896 170 878 Z" fill="#c8b78f" stroke="#1e2a38" stroke-width="3"/>
+        <path d="M292 764 L368 648 L372 648 L374 656 L448 746 Q380 764 292 764 Z" fill="#7a6a52" stroke="#1e2a38" stroke-width="2.5"/>
+        <path d="M360 652 Q366 640 374 648 Q376 638 384 644 Q382 630 392 636" fill="none" stroke="#c0442e" stroke-width="4" opacity=".75"/>
+        <rect x="500" y="722" width="6" height="30" fill="#1e2a38"/>
+        <circle cx="503" cy="716" r="13" fill="#4a7a4e" stroke="#1e2a38" stroke-width="2"/>
+        <rect x="536" y="730" width="5" height="25" fill="#1e2a38"/>
+        <circle cx="538" cy="725" r="10" fill="#5f8a5e" stroke="#1e2a38" stroke-width="2"/>
       </g>
       <g id="waves6"></g>
     </svg>
@@ -192,8 +213,8 @@ const PX=lon=>(lon-93)/27*640+40, PY=lat=>(6-lat)/18*700+190;
 const jawa=[[105.1,-5.9],[106.5,-6.0],[108,-6.2],[110,-6.4],[112,-6.7],[114.4,-6.9],[115.5,-7.7],[114.4,-8.2],[110,-8.2],[108,-7.8],[106,-7.4],[104.8,-7.0]];
 const jpath=jawa.map((p,i)=>(i?'L':'M')+PX(p[0])+' '+PY(p[1])).join(' ')+' Z';
 $('map').innerHTML=`
-  <path d="M60 320 Q130 460 231 660" stroke="#8a7f6a" stroke-width="3" fill="none" opacity=".5" stroke-dasharray="2 6"/>
-  <text class="sans" x="46" y="304" font-size="16" fill="#8a7f6a" letter-spacing="1" transform="rotate(52 46 304)">SUMATRA</text>
+ <path id="sumatra5" d="M${PX(93.2)} ${PY(2.5)} L${PX(97)} ${PY(0.5)} L${PX(100.5)} ${PY(-2.2)} L${PX(103.5)} ${PY(-4.8)} L${PX(105.6)} ${PY(-5.85)} L${PX(104.2)} ${PY(-6.1)} L${PX(101.2)} ${PY(-4.2)} L${PX(97.5)} ${PY(-1.0)} L${PX(93.5)} ${PY(2.2)} Z" fill="#c8b78f" stroke="#1e2a38" stroke-width="2.5" opacity="0"/>
+ <text class="sans" x="188" y="452" font-size="16" fill="#5f5748" letter-spacing="1" transform="rotate(52 188 452)">SUMATRA</text>
   <ellipse cx="660" cy="${PY(-8.5)}" rx="20" ry="9" fill="#c8b78f" stroke="#1e2a38" stroke-width="2"/>
   <ellipse cx="694" cy="${PY(-8.15)}" rx="12" ry="7" fill="#c8b78f" stroke="#1e2a38" stroke-width="2"/>
   <path d="${jpath}" fill="#c8b78f" stroke="#1e2a38" stroke-width="3" id="jawa5" opacity="0"/>
@@ -215,6 +236,14 @@ const QUAKES=[
 
 const SCW=[[0,6.5],[6.5,14],[14,22],[22,30],[30,36],[36,40]];
 const fade=(t,i)=>Math.min(seg(t,SCW[i][0],SCW[i][0]+0.45),1-seg(t,SCW[i][1]-0.35,SCW[i][1]));
+// entering direction: tiap scene elemen masuk dari satu arah konsisten (kiri), dgn overshoot
+const slideIn=(t,a,b,fromX=-90)=>{const q=pop(seg(t,a,b));return{q,tx:lerp(fromX,0,q)};};
+
+// roll-digit counter: tiap digit bergulir saat berubah (dipakai S1 depth + S3 years)
+function rollDigits(str){
+  // monospace-ish: angka dgn tail opacity utk digit yg baru "roll"
+  return str;
+}
 
 function render(t){
   E.grat.style.transform=`translate(${-(t*6)%72}px,${-(t*4)%72}px)`;
@@ -228,6 +257,14 @@ function render(t){
     const p=seg(t,1,6.2), d=Math.floor(7192*Math.pow(p,1.7));
     $('depth').textContent=d.toLocaleString('id-ID');
     $('rptr').setAttribute('transform',`translate(0,${(d/7192)*500})`);
+    // glints: kilau di permukaan ombak
+    let g='';
+    for(let i=0;i<7;i++){
+      const gx=((i*127+t*23)%720), gy=418+Math.sin(i*2.1)*4;
+      const gp=(Math.sin(t*3.1+i*1.7)+1)/2;
+      if(gp>0.55)g+=`<ellipse cx="${gx}" cy="${gy}" rx="${6*gp}" ry="2" fill="#ffffff" opacity="${(gp-0.55)*1.4}" filter="url(#glowW)"/>`;
+    }
+    $('glints').innerHTML=g;
     $('boat').setAttribute('transform',`translate(${Math.sin(t*0.7)*9},${Math.sin(t*2.2)*7}) rotate(${Math.sin(t*1.7)*3+Math.sin(t*2.2)*2} 360 380)`);
     $('waves1a').setAttribute('transform',`translate(${-waveShift},0)`);
     $('waves1b').setAttribute('transform',`translate(${-waveShift2+40},0)`);
@@ -250,6 +287,10 @@ function render(t){
     $('bubbles').innerHTML=bub;
     $('arrL').setAttribute('transform',`translate(${(t*22)%34},0)`);
     $('arrR').setAttribute('transform',`translate(${-(t*22)%34},0)`);
+    const labelIn=slideIn(t,7.2,7.9);
+    const pe=$('plateEur');
+    pe.style.transform=`translate(${labelIn.tx}px,0)`;
+    pe.style.opacity=fade(t,1)*labelIn.q;
   }
   else if(t<22){ // S3
     E.s3.style.opacity=fade(t,2);
@@ -261,6 +302,9 @@ function render(t){
     $('mtr').textContent='= '+(mtr<10?mtr.toFixed(1).replace('.',','):Math.round(mtr))+' meter';
     $('rfill').setAttribute('width',years*6);
     $('rmark').setAttribute('transform',`translate(${years*6},0)`);
+    // rmark bounce tiap kelipatan 25 tahun
+    const bounce=(years%25===0&&years>0)?Math.max(0,1-(t-15.8-years/100*5.2)/0.25):0;
+    $('rmark').setAttribute('transform',`translate(${years*6},${-10*bounce})`);
     $('cmnum').setAttribute('fill', t>15.8?'#c0442e':'#1e2a38');
   }
   else if(t<30){ // S4
@@ -300,6 +344,9 @@ function render(t){
     E.s5.style.transform=`scale(${lerp(1.09,1,inP)}) translate(${(t-30)*3}px,0)`;
     $('h5').style.opacity=pop(seg(t,30.1,30.7));
     $('jawa5').style.opacity=pop(seg(t,30.4,31));
+    const suIn=slideIn(t,30.9,31.6,-140);
+    $('sumatra5').style.opacity=fade(t,4)*suIn.q;
+    $('sumatra5').style.transform=`translate(${suIn.tx}px,0)`;
     $('trench5').style.opacity=pop(seg(t,31.2,31.7));
     $('plbl').style.opacity=pop(seg(t,31.4,31.9));
     $('jlbl').style.opacity=pop(seg(t,30.8,31.3));

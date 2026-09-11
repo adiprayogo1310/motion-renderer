@@ -1,25 +1,25 @@
 # QA Report — vision
 
-Model: or/inclusionai/ling-3.0-flash-vl:free
+Model: bai/glm-5.3-flash
 Frames: 6
-Issues: 0
+Issues: 2
 
-Verdict: **PASS**
+Verdict: **FAIL**
 
 ## qa/frame_03.png
 OK
 
 ## qa/frame_10.png
-OK
+
 
 ## qa/frame_18.png
-OK
+ISSUE: ilustrasi HP (tinggi HP ≈ 15cm) tidak memvisualisasikan perbandingan dengan 2,7 meter — perlu ditampilkan ~18 HP ditumpuk agar skala terlihat.
 
 ## qa/frame_25.png
-OK.
+OK
 
 ## qa/frame_33.png
 OK
 
 ## qa/frame_38.png
-OK
+ISSUE: Ilustrasi menyerupai papan surfing/perahu dengan sirip, tidak jelas hubungannya dengan tema "bumi tidak diam" (tektonik/gempa).
