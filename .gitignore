@@ -2,6 +2,11 @@ node_modules/
 out/
 *.png
 qa/
-
 tmp/
 __pycache__/
+<<<<<<< HEAD
+=======
+chrome/
+*.zip
+qa-report.md
+>>>>>>> 70f8a48 (gitignore: rapikan conflict marker)

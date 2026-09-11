@@ -16,6 +16,8 @@ mkdirSync(resolve(root, 'qa'), { recursive: true });
 
 const browser = await puppeteer.launch({
   headless: true,
+  protocolTimeout: 180000,
+  executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
   args: ['--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage', '--font-render-hinting=none'],
 });
 const page = await browser.newPage();

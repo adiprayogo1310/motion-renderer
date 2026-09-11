@@ -39,7 +39,6 @@ def main():
     if len(segs) != len(scenes):
         print(f"WARN: {len(segs)} segmen suara vs {len(scenes)} scene di spec — "
               f"pausing antara segmen menyatu/menipis. Mapping berurutan tetap dipakai.")
-    # mapping: scene i -> segmen i (berurutan); kelebihan segmen digabung ke scene terakhir
     sc_bounds = []
     # gabung segmen yang lebih banyak dari scene: segmen ekstra menempel ke scene terakhir yang cocok
     n_s, n_g = len(scenes), len(segs)
@@ -55,6 +54,11 @@ def main():
         b = segs[gi + c - 1][1]
         sc_bounds.append([a, b])
         gi += c
+    # windows kontinu: scene berikut mulai tepat setelah scene sebelumnya (gap jadi bagian scene sebelumnya)
+    for i in range(1, len(sc_bounds)):
+        sc_bounds[i][0] = sc_bounds[i-1][1]
+    # pastikan window terakhir menutup sampai DUR
+    sc_bounds[-1][1] = dur
 
     T = spec["theme"]
     brand = spec["brand"]
@@ -82,6 +86,10 @@ def main():
     html = html.replace("__BOUNDS__", bounds_js)
     html = html.replace("__CAPS__", cap_lines)
     html = html.replace("__DUR__", str(dur))
+    # depth axis hanya untuk tema kedalaman: hapus static DOM kalau tak ada scene plumb/floor/compare
+    if not any(s["visual"].get("type") in ("plumb", "floor", "compare") for s in spec["scenes"]):
+        html = re.sub(r'<div id="depthline"[^>]*></div>\s*\n', "", html)
+        html = re.sub(r'<div id="altlabels"></div>\s*\n', "", html)
     out = f"{ROOT}/video/index.html"
     open(out, "w").write(html)
     print(f"built {out}: {len(scenes)} scenes, DUR={dur}s dari {spec['vo']}")
@@ -104,6 +112,7 @@ TEMPLATE = r"""<!DOCTYPE html>
   .cap .cy{color:var(--cyan)}
   .tt{position:absolute;padding:10px 16px;border:1.5px solid #ffffffcc;border-radius:10px;
       font-size:20px;font-weight:700;color:var(--fg);background:rgba(13,21,38,.85);white-space:nowrap}
+  .hidden{display:none!important}
   .tt .cy{color:var(--cyan)}
   .star{position:absolute;background:#22304d;border-radius:50%}
 </style>
@@ -141,14 +150,6 @@ function sceneIndex(t){for(let i=0;i<BOUNDS.length;i++){if(t>=BOUNDS[i][0]&&t<BO
 const fadeRange=(t,a,b)=>Math.min(seg(t,a,a+0.4),1-seg(t,b-0.3,b));
 
 stage.insertAdjacentHTML('beforeend',`
-  <div id="depthline" style="position:absolute;right:56px;top:340px;width:3px;height:698px;background:var(--line)"></div>
-  <div id="altlabels">
-    <div class="alt" style="top:330px">0 <b>m</b></div>
-    <div class="alt" style="top:510px">−2.000 <b>m</b></div>
-    <div class="alt" style="top:700px">−4.000 <b>m</b></div>
-    <div class="alt" style="top:890px">−6.000 <b>m</b></div>
-    <div class="alt red" style="top:1035px">−7.192 <b>m</b></div>
-  </div>
   <svg width="720" height="1280" viewBox="0 0 720 1280" style="position:absolute;left:0;top:0" id="scene">
     <defs><filter id="glowC" x="-40%" y="-40%" width="180%" height="180%">
       <feGaussianBlur stdDeviation="3" result="b"/>
@@ -201,7 +202,42 @@ stage.insertAdjacentHTML('beforeend',`
       <text id="eqLine2" x="360" y="720" text-anchor="middle" font-size="22" fill="var(--fg)" opacity="0">Bukan <tspan fill="var(--red)" font-weight="900">KEJADIAN</tspan> yang datang tiba-tiba</text></g>
     <g id="outro" filter="url(#glowC)">
       <text id="o1" x="360" y="480" text-anchor="middle" font-size="52" font-weight="900" fill="var(--fg)" opacity="0">BUMI TIDAK <tspan fill="var(--cyan)">DIAM</tspan></text>
-      <path id="fault6" d="M120 640 L340 628 L360 636 L600 620" stroke="var(--red)" stroke-width="3" fill="none" opacity="0"/></g>`);
+      <path id="fault6" d="M120 640 L340 628 L360 636 L600 620" stroke="var(--red)" stroke-width="3" fill="none" opacity="0"/></g>`); 
+    /* generic scene elements (dipakai tema lain via visual.type) */
+    stage.insertAdjacentHTML('beforeend',`
+    <svg width="720" height="1280" viewBox="0 0 720 1280" style="position:absolute;left:0;top:0" id="scene2">
+      <defs><filter id="glowO" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="4" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <radialGradient id="sunGrad"><stop offset="0%" stop-color="#ffe28a"/><stop offset="70%" stop-color="#ffb347"/><stop offset="100%" stop-color="#ff8c42"/></radialGradient></defs>
+      <g id="sunrays" filter="url(#glowO)">
+        <circle id="sunBody" cx="360" cy="420" r="110" fill="url(#sunGrad)"/>
+        <g id="rayGroup"></g></g>
+      <g id="earthmini" filter="url(#glowC)">
+        <circle id="earthC" cx="360" cy="900" r="46" stroke="#4dd8ff" stroke-width="2.5" fill="rgba(77,216,255,.07)"/>
+        <path id="earthCont" d="M330 880 Q350 860 375 872 Q400 884 392 908 Q378 932 352 926 Q332 918 330 880 Z" fill="rgba(77,216,255,.25)" stroke="none"/>
+        <path id="beam" d="M418 430 L360 854" stroke="#ffe28a" stroke-width="4" stroke-dasharray="18 14" opacity="0"/>
+        <text id="beamLbl" x="395" y="650" font-size="17" fill="#ffe28a" font-weight="700" opacity="0">8 menit 20 detik</text></g>
+      <g id="scaleviz" filter="url(#glowO)">
+        <circle id="bigSun" cx="360" cy="560" r="230" stroke="#ffb347" stroke-width="3" fill="rgba(255,179,71,.06)"/>
+        <g id="earthDots"></g>
+        <text id="scaleLbl" x="360" y="880" text-anchor="middle" font-size="26" font-weight="900" fill="var(--fg)"></text></g>
+      <g id="tempviz" filter="url(#glowO)">
+        <circle id="tempSun" cx="360" cy="500" r="180" stroke="#ffb347" stroke-width="3" fill="rgba(255,179,71,.08)"/>
+        <g id="tempWaves"></g>
+        <text id="tempLbl" x="360" y="780" text-anchor="middle" font-size="44" font-weight="900" fill="#ff5252"></text>
+        <text x="360" y="830" text-anchor="middle" font-size="18" fill="var(--dim)" id="tempSub">SUHU PERMUKAAN MATAHARI</text></g>
+      <g id="coreviz" filter="url(#glowO)">
+        <circle id="coreC" cx="360" cy="560" r="120" fill="rgba(255,179,71,.25)" stroke="#ffb347" stroke-width="3"/>
+        <circle id="photonC" cx="360" cy="560" r="9" fill="#ffe28a"/>
+        <g id="bounceTrail"></g>
+        <text id="coreLbl" x="360" y="820" text-anchor="middle" font-size="20" fill="var(--orange)" font-weight="700"></text></g>
+      <g id="journeyviz" filter="url(#glowO)">
+        <circle id="jsun" cx="360" cy="300" r="90" fill="url(#sunGrad)"/>
+        <circle id="jearth" cx="360" cy="1000" r="40" stroke="#4dd8ff" stroke-width="2.5" fill="rgba(77,216,255,.07)"/>
+        <line id="jpath" x1="360" y1="400" x2="360" y2="952" stroke="#ffe28a" stroke-width="3" stroke-dasharray="16 12" opacity=".8"/>
+        <circle id="jphoton" cx="360" cy="420" r="10" fill="#ffe28a" filter="url(#glowO)"/>
+        <text id="jlbl" x="420" y="660" font-size="20" fill="#ffe28a" font-weight="800"></text></g>`);
 $('stars').innerHTML=Array.from({length:42},(_,i)=>
   `<div class="star" style="left:${(i*173)%700}px;top:${(i*257)%1240}px;width:${2+(i%3)}px;height:${2+(i%3)}px;opacity:${.3+(i%5)*.12}"></div>`).join('');
 
@@ -230,12 +266,80 @@ function sceneEls(ids,on){
 function render(t){
   ['sea','boat','plumb','floor','semeru','plates','ruler3','spring','eq','outro'].forEach(k=>{
     const el=$(k);if(el)el.style.opacity=0;});
+  ['sunrays','earthmini','scaleviz','tempviz','coreviz','journeyviz'].forEach(k=>{
+    const el=$(k);if(el)el.style.opacity=0;});
   $('tooltip').classList.add('hidden');
   const si=sceneIndex(t);
   for(let i=0;i<CAPS.length;i++)if(t>=BOUNDS[i][0]&&t<BOUNDS[i][1])showCap(t,Math.min(i,CAPS.length-1));
   const vid=SPEC[si].visual||{};const A=SC[si],B=SCEND[si];
+  // depth axis hanya relevan untuk tema kedalaman (plumb/floor/compare) — sembunyikan di tema lain
+  const depthTheme=SPEC.some(s=>['plumb','floor','compare'].includes(s.visual.type));
+  const dl=$('depthline'), al=$('altlabels');
+  if(!depthTheme){if(dl)dl.style.opacity=0;if(al)al.style.opacity=0;}
+  else{if(dl)dl.style.opacity=1;if(al)al.style.opacity=1;}
 
   switch(vid.type){
+    case 'sun-rays':{
+      $('sunrays').style.opacity=1;$('earthmini').style.opacity=1;
+      $('sunBody').setAttribute('r',110+Math.sin(t*1.8)*4);
+      let rays='';
+      for(let i=0;i<12;i++){
+        const ang=i*30+t*6, r1=120, r2=150+Math.sin(t*3+i)*18;
+        rays+=`<line x1="${360+r1*Math.cos(ang*Math.PI/180)}" y1="${420+r1*Math.sin(ang*Math.PI/180)}" x2="${360+r2*Math.cos(ang*Math.PI/180)}" y2="${420+r2*Math.sin(ang*Math.PI/180)}" stroke="var(--orange)" stroke-width="2.5" opacity=".7"/>`;
+      }
+      $('rayGroup').innerHTML=rays;
+      if(vid.tooltip)tooltip(t,A+0.5,B-0.05,vid.tooltip.text.replace(/<cy>/g,'<span class="cy">').replace(/<\/cy>/g,'</span>'),vid.tooltip.x,vid.tooltip.y);
+      break;}
+    case 'scale':{
+      $('scaleviz').style.opacity=1;
+      const fill=vid.fill||false;
+      const p=fill?1:pop(seg(t,A+0.4,B-0.3));
+      let dots='';
+      for(let i=0;i<Math.floor(60*p);i++){
+        const ex=180+((i*127)%360), ey=420+((i*211)%280);
+        dots+=`<circle cx="${ex}" cy="${ey}" r="4" fill="#4dd8ff" opacity=".55"/>`;
+      }
+      $('earthDots').innerHTML=dots;
+      $('scaleLbl').textContent=fill?vid.earth_count+' BUMI':'1 BUMI = 109 MATAHARI? TIDAK —';
+      if(fill)$('scaleLbl').textContent=vid.earth_count+' BUMI MUAT DI MATAHARI';
+      break;}
+    case 'sun-temp':{
+      $('tempviz').style.opacity=1;
+      $('tempLbl').textContent=vid.temp;
+      let tw='';
+      for(let i=0;i<8;i++){
+        const wy=430+((t*60+i*40)%320);
+        tw+=`<line x1="${280+((i*37)%160)}" y1="${wy}" x2="${280+((i*37)%160)+24}" y2="${wy}" stroke="#ff5252" stroke-width="2" opacity="${1-(wy-430)/320}"/>`;
+      }
+      $('tempWaves').innerHTML=tw;
+      break;}
+    case 'core':{
+      $('coreviz').style.opacity=1;
+      $('coreLbl').textContent=vid.collide?'BERTABRAKAN BERULANG KALI':(vid.bounce?'40.000 — 170.000 TAHUN':'DARI INTI MATAHARI');
+      // photon random-walk
+      const bp=seg(t,A+0.4,B);
+      const px=360+Math.sin(bp*40)*90+Math.sin(bp*13)*40;
+      const py=560+Math.cos(bp*31)*70+Math.cos(bp*9)*30;
+      $('photonC').setAttribute('cx',px);$('photonC').setAttribute('cy',py);
+      let trail='';
+      if(vid.bounce||vid.collide){
+        for(let i=1;i<8;i++){
+          const q=Math.max(0,bp-i*0.02);
+          trail+=`<circle cx="${360+Math.sin(q*40)*90+Math.sin(q*13)*40}" cy="${560+Math.cos(q*31)*70+Math.cos(q*9)*30}" r="${5-i*0.5}" fill="#ffe28a" opacity="${0.5-i*0.06}"/>`;
+        }
+        $('bounceTrail').innerHTML=trail;
+      }
+      break;}
+    case 'journey':{
+      $('journeyviz').style.opacity=1;
+      const jp=vid.phase==='depart'?seg(t,A+0.3,B):1;
+      $('jphoton').setAttribute('cy',420+jp*530);
+      $('jlbl').textContent=vid.phase==='depart'?'CAHAYA MENUJU BUMI':'TIBA DI BUMI';
+      if(vid.phase==='arrive'){
+        $('jearth').setAttribute('r',40+Math.sin(t*4)*3);
+        $('jlbl').setAttribute('fill','#4dd8ff');
+      }
+      break;}
     case 'boat':{
       $('sea').style.opacity=1;$('boat').style.opacity=1;
       $('seapath').setAttribute('d',setWaves(t,340));
@@ -311,10 +415,12 @@ function render(t){
       break;}
     case 'outro':{
       $('outro').style.opacity=1;
+      // o1: title dari spec (fallback BUMI TIDAK DIAM), fault line hanya utk tema fault
+      $('o1').innerHTML=vid.title?vid.title.replace(/<cy>/g,'<tspan fill="var(--cyan)">').replace(/<\/cy>/g,'</tspan>'):'BUMI TIDAK <tspan fill="var(--cyan)">DIAM</tspan>';
       $('o1').style.opacity=pop(seg(t,A+0.3,A+1));
       const fp=seg(t,A+0.9,DUR-0.4);
-      $('fault6').style.opacity=fp;
-      $('fault6').setAttribute('stroke-dasharray',`${fp*560} 999`);
+      if(vid.fault){$('fault6').style.opacity=fp;$('fault6').setAttribute('stroke-dasharray',`${fp*560} 999`);}
+      else{$('fault6').style.opacity=0;}
       break;}
   }
 }
