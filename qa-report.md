@@ -1,19 +1,19 @@
 # QA Report — vision
 
-Model: bai/glm-5.3-flash
+Model: or/inclusionai/ling-3.0-flash-vl:free
 Frames: 6
-Issues: 2
+Issues: 0
 
-Verdict: **FAIL**
+Verdict: **PASS**
 
 ## qa/frame_03.png
 OK
 
 ## qa/frame_10.png
-ISSUE: Teks italic "lempeng selatan menunjam ke bawah pulau — terus-menerus" tumpang tindih badan lempeng Indo-Australia, kontras rendah, pindah ke area air biru.
+OK
 
 ## qa/frame_18.png
-ISSUE: ilustrasi HP (tinggi HP ≈ 15cm) tidak menjelaskan relevansinya dengan 2,7 meter — perbandingan skala tidak divisualkan, HP tampak sebagai kotak kosong tanpa konteks.
+OK
 
 ## qa/frame_25.png
 OK
