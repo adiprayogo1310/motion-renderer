@@ -1,0 +1,34 @@
+{
+  "assets": [
+    {
+      "name": "ocean-surface",
+      "prompt": "aerial photograph of deep blue ocean surface at golden hour, gentle waves, photorealistic, national geographic style, natural lighting, high detail, 8k",
+      "negative": "text, watermark, people, boats, blurry, cartoon, illustration, low quality",
+      "width": 1024, "height": 576, "steps": 6
+    },
+    {
+      "name": "sun-closeup",
+      "prompt": "close-up photograph of the sun surface with solar flares, dramatic orange plasma, space photography, photorealistic, high detail, NASA style",
+      "negative": "text, watermark, blurry, cartoon, illustration, low quality",
+      "width": 1024, "height": 1024, "steps": 6
+    },
+    {
+      "name": "sun-core-glow",
+      "prompt": "glowing plasma core, intense yellow-white light radiating through orange gas clouds, abstract energy, photorealistic space photography",
+      "negative": "text, watermark, blurry, cartoon, low quality",
+      "width": 1024, "height": 1024, "steps": 6
+    },
+    {
+      "name": "earth-from-space",
+      "prompt": "photograph of earth from space, blue planet with white clouds and blue ocean, black space background, NASA photography, photorealistic, high detail",
+      "negative": "text, watermark, blurry, cartoon, illustration, low quality",
+      "width": 1024, "height": 1024, "steps": 6
+    },
+    {
+      "name": "morning-sunlight",
+      "prompt": "warm morning sunlight rays through clouds over calm sea, golden light on water surface, photorealistic landscape photography, peaceful, high detail",
+      "negative": "text, watermark, people, blurry, cartoon, low quality",
+      "width": 1024, "height": 576, "steps": 6
+    }
+  ]
+}

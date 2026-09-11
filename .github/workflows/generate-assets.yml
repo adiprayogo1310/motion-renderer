@@ -1,0 +1,62 @@
+name: generate-assets
+on:
+  workflow_dispatch:
+    inputs:
+      spec:
+        description: 'Slug spec (mis. cahaya-matahari) — baca specs/<spec>.assets.json'
+        required: true
+        type: string
+  push:
+    paths: ['specs/*.assets.json']
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ComfyUI + comfy-cli (CPU build, model turbo kecil)
+        run: |
+          pip install comfy-cli
+          comfy --skip-prompt tracking disable
+          comfy --skip-prompt install --cpu --fast-deps --skip-prompt
+          comfy model download \
+            --url "https://huggingface.co/stabilityai/sd-turbo/resolve/main/sd_turbo.safetensors" \
+            --relative-path models/checkpoints
+          comfy model download \
+            --url "https://huggingface.co/madebyollin/sdxl-turbo/resolve/main/sdxl_turbo.safetensors" \
+            --relative-path models/checkpoints
+
+      - name: Launch ComfyUI headless
+        run: |
+          comfy launch --background -- --cpu
+          sleep 15
+          curl -sf http://127.0.0.1:8188/system_stats | head -c 200
+
+      - name: Generate assets dari spec
+        run: |
+          # slug: dari input dispatch, atau dari nama file .assets.json yang berubah di push
+          if [ -n "${{ inputs.spec }}" ]; then
+            SLUG="${{ inputs.spec }}"
+          else
+            CHANGED=$(git diff --name-only HEAD~1 HEAD | grep 'specs/.*\.assets\.json' | head -1)
+            SLUG=$(basename "$CHANGED" .assets.json)
+          fi
+          echo "slug=$SLUG"
+          test -f "specs/${SLUG}.assets.json" || { echo "spec assets tidak ada: ${SLUG}.assets.json"; exit 1; }
+          python3 scripts/generate_assets.py --spec "specs/${SLUG}.assets.json" --output assets/${SLUG}
+          ls -la assets/${SLUG}
+
+      - name: Commit assets
+        run: |
+          git config user.name "actions-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets/
+          git commit -m "assets: generated $(date -u +%Y-%m-%dT%H:%M)Z [skip ci]" || echo "no changes"
+          git fetch origin main
+          git rebase origin/main --strategy-option=theirs || git pull --rebase || true
+          git push
