@@ -19,17 +19,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install ComfyUI + comfy-cli (CPU build, model turbo kecil)
+      - name: Install ComfyUI + comfy-cli (CPU build, sd-turbo)
         run: |
           pip install comfy-cli
           comfy --skip-prompt tracking disable
-          comfy install --cpu --fast-deps --skip-requirement --skip-manager --no-comfyui-manager || true
+          comfy install --cpu --fast-deps --skip-requirement || true
           comfy --workspace=$HOME/comfy/ComfyUI --skip-prompt model download \
             --url "https://huggingface.co/stabilityai/sd-turbo/resolve/main/sd_turbo.safetensors" \
             --relative-path models/checkpoints
-          comfy --workspace=$HOME/comfy/ComfyUI --skip-prompt model download \
-            --url "https://huggingface.co/madebyollin/sdxl-turbo/resolve/main/sdxl_turbo.safetensors" \
-            --relative-path models/checkpoints
+          ls -la $HOME/comfy/ComfyUI/models/checkpoints/
 
       - name: Launch ComfyUI headless
         run: |
