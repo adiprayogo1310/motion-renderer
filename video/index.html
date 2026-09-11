@@ -64,7 +64,7 @@
       <text id="depth" x="240" y="700" font-size="104" font-weight="700" fill="#ffffff" font-variant-numeric="tabular-nums">0</text>
       <text x="240" y="760" font-size="30" class="sans" fill="#cfe3f2">meter di bawah laut</text>
       <g id="glints"></g>
-      <text class="cap" x="320" y="1180" text-anchor="middle" font-size="20">dasarnya lebih dalam daripada Semeru tingginya</text>
+      <text class="cap" x="320" y="1180" text-anchor="middle" font-size="20">palung lebih dalam daripada Semeru yang tinggi</text>
     </svg>
   </div>
 
@@ -322,10 +322,10 @@ function render(t){
     const comp=lerp(120,40,st);
     let jx=0,wob=0;
     if(snap){ jx=(1-ease(seg(t,26.5,27.2)))*50; shake=(1-ease(seg(t,26.5,27.3)))*13; wob=Math.sin((t-26.5)*16)*8*Math.exp(-(t-26.5)*2.5); }
-    let zig=`M${300-comp/2+ (snap?-jx:0)} 760`;
+    let zig=`M${280+ (snap?-jx:0)} 760`;
     const n=8,zw=comp/n;
-    for(let i=0;i<n;i++)zig+=` L${300-comp/2+(snap?-jx:0)+zw*(i+.5)} ${760+(i%2?26:-26)}`;
-    zig+=` L${420-comp/2+(snap?-jx:0)} 760`;
+    for(let i=0;i<n;i++)zig+=` L${280+(snap?-jx:0)+zw*(i+.5)} ${760+(i%2?26:-26)}`;
+    zig+=` L${440+(snap?-jx:0)} 760`;
     let viz=`<rect x="80" y="710" width="${200-(snap?jx*0.5:0)-comp*0}" height="100" fill="#b8a276" stroke="#1e2a38" stroke-width="4" transform="translate(${snap?-jx+wob:Math.sin(t*30)*st*4},0)"/>`+
       `<rect x="${440+(snap?jx:0)-Math.sin(t*30)*st*4}" y="710" width="200" height="100" fill="#7a6a52" stroke="#1e2a38" stroke-width="4"/>`+
       `<path d="${zig}" stroke="#c0442e" stroke-width="5" fill="none"/>`;

@@ -1,20 +1,19 @@
 # QA Report — vision
 
-Model: or/inclusionai/ling-3.0-flash-vl:free
+Model: bai/glm-5.3-flash
 Frames: 6
-Issues: 1
+Issues: 2
 
 Verdict: **FAIL**
 
 ## qa/frame_03.png
-ISSUE: Caption "dasarnya lebih dalam daripada Semeru tingginya" bertentang dengan angka 1.417m shown — Semeru ±3.676m, dasar tidak lebih dalam.
-OK: teks tidak bertabrakan, tidak terpotong tepi, ilustrasi (layang-layang, matahari, awan, skala) jelas dan sesuai tema.
+OK
 
 ## qa/frame_10.png
-OK
+ISSUE: Teks italic "lempeng selatan menunjam ke bawah pulau — terus-menerus" tumpang tindih badan lempeng Indo-Australia, kontras rendah, pindah ke area air biru.
 
 ## qa/frame_18.png
-OK
+ISSUE: ilustrasi HP (tinggi HP ≈ 15cm) tidak menjelaskan relevansinya dengan 2,7 meter — perbandingan skala tidak divisualkan, HP tampak sebagai kotak kosong tanpa konteks.
 
 ## qa/frame_25.png
 OK
