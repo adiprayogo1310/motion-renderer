@@ -86,6 +86,14 @@ def main():
     html = html.replace("__BOUNDS__", bounds_js)
     html = html.replace("__CAPS__", cap_lines)
     html = html.replace("__DUR__", str(dur))
+    # asset foto realistis (opsional) — mapping name -> path relatif
+    asset_map = spec.get("assets", {})  # {"ocean-surface": "assets/cahaya-matahari/ocean-surface.png", ...}
+    # default: cari di folder assets/<slug>/
+    if not asset_map:
+        import glob as _g
+        for f in _g.glob(f"{ROOT}/assets/{slug}/*.png"):
+            asset_map[os.path.splitext(os.path.basename(f))[0]] = f"assets/{slug}/{os.path.basename(f)}"
+    html = html.replace("__ASSETS__", json.dumps(asset_map))
     # depth axis hanya untuk tema kedalaman: hapus static DOM kalau tak ada scene plumb/floor/compare
     if not any(s["visual"].get("type") in ("plumb", "floor", "compare") for s in spec["scenes"]):
         html = re.sub(r'<div id="depthline"[^>]*></div>\s*\n', "", html)
@@ -119,6 +127,7 @@ TEMPLATE = r"""<!DOCTYPE html>
 </head>
 <body>
 <div id="stage">
+  <img id="bgphoto" class="lyr" style="width:100%;height:100%;object-fit:cover;opacity:0" alt="">
   <div id="stars"></div>
   <div id="depthline" style="position:absolute;right:56px;top:340px;width:3px;height:698px;background:var(--line)"></div>
   <div id="altlabels"></div>
@@ -135,6 +144,7 @@ TEMPLATE = r"""<!DOCTYPE html>
 const SPEC=__SCENES__;
 const BOUNDS=__BOUNDS__;
 const CAPS=__CAPS__;
+const ASSETS=__ASSETS__;
 const DUR=__DUR__;
 const W=720,H=1280;
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
@@ -262,6 +272,13 @@ function showCap(t,i){
   c.innerHTML=html;c.style.opacity=1;}
 function sceneEls(ids,on){
   ids.forEach(k=>{const el=$(k);if(el)el.style.opacity=on;});}
+function setBg(name,t,fade=0.5){
+  const el=$('bgphoto');
+  if(!name||!ASSETS[name]){el.style.opacity=0;return;}
+  if(el.dataset.cur!==name){el.src=ASSETS[name];el.dataset.cur=name;}
+  const p=pop(seg(t,fade,fade+0.6));
+  el.style.opacity=p;}
+
 
 function render(t){
   ['sea','boat','plumb','floor','semeru','plates','ruler3','spring','eq','outro'].forEach(k=>{
@@ -272,6 +289,8 @@ function render(t){
   const si=sceneIndex(t);
   for(let i=0;i<CAPS.length;i++)if(t>=BOUNDS[i][0]&&t<BOUNDS[i][1])showCap(t,Math.min(i,CAPS.length-1));
   const vid=SPEC[si].visual||{};const A=SC[si],B=SCEND[si];
+  // background foto realistis (jika scene punya field "bg")
+  setBg(vid.bg, t, A);
   // depth axis hanya relevan untuk tema kedalaman (plumb/floor/compare) — sembunyikan di tema lain
   const depthTheme=SPEC.some(s=>['plumb','floor','compare'].includes(s.visual.type));
   const dl=$('depthline'), al=$('altlabels');

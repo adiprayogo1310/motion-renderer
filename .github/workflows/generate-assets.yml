@@ -16,10 +16,13 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     timeout-minutes: 40
+    env:
+      REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install ComfyUI + comfy-cli (CPU build, sd-turbo)
+      - name: Install ComfyUI + comfy-cli (CPU fallback, sd-turbo)
+        if: ${{ env.REPLICATE_API_TOKEN == '' }}
         run: |
           pip install comfy-cli
           comfy --skip-prompt tracking disable
@@ -29,7 +32,8 @@ jobs:
             --relative-path models/checkpoints
           ls -la $HOME/comfy/ComfyUI/models/checkpoints/
 
-      - name: Launch ComfyUI headless
+      - name: Launch ComfyUI headless (fallback)
+        if: ${{ env.REPLICATE_API_TOKEN == '' }}
         run: |
           comfy launch --background -- --cpu
           sleep 15

@@ -1,34 +1,35 @@
 {
+  "model": "replicate",
   "assets": [
     {
       "name": "ocean-surface",
-      "prompt": "aerial photograph of deep blue ocean surface at golden hour, gentle waves, photorealistic, national geographic style, natural lighting, high detail, 8k",
-      "negative": "text, watermark, people, boats, blurry, cartoon, illustration, low quality",
-      "width": 1024, "height": 576, "steps": 6
+      "prompt": "award-winning professional photography, aerial view of deep blue open ocean at golden hour, gentle rolling swells, sun glint reflecting on water surface, fine wave texture, soft warm light, National Geographic style, photorealistic, ultra detailed, 8k, shot on 85mm lens, natural color grading",
+      "negative": "text, watermark, logo, illustration, cartoon, 3d render, painting, flat color, vector, low detail, blurry",
+      "width": 1280, "height": 720, "steps": 4, "seed": 100000
     },
     {
       "name": "sun-closeup",
-      "prompt": "close-up photograph of the sun surface with solar flares, dramatic orange plasma, space photography, photorealistic, high detail, NASA style",
-      "negative": "text, watermark, blurry, cartoon, illustration, low quality",
-      "width": 1024, "height": 1024, "steps": 6
+      "prompt": "extreme close-up photograph of the surface of the sun, turbulent orange and yellow solar plasma, solar flares and prominences, bright photosphere, space photography, NASA SDO style, photorealistic, highly detailed, 8k",
+      "negative": "text, watermark, illustration, cartoon, 3d render, painting, flat color, blurry, low detail",
+      "width": 1024, "height": 1024, "steps": 4, "seed": 100001
     },
     {
       "name": "sun-core-glow",
-      "prompt": "glowing plasma core, intense yellow-white light radiating through orange gas clouds, abstract energy, photorealistic space photography",
-      "negative": "text, watermark, blurry, cartoon, low quality",
-      "width": 1024, "height": 1024, "steps": 6
+      "prompt": "intense glowing yellow-white plasma core of a star, radiant energy radiating through translucent orange gas clouds, volumetric light, abstract cosmic energy, professional astrophotography, photorealistic, 8k, high dynamic range",
+      "negative": "text, watermark, illustration, cartoon, 3d render, painting, flat, blurry",
+      "width": 1024, "height": 1024, "steps": 4, "seed": 100002
     },
     {
       "name": "earth-from-space",
-      "prompt": "photograph of earth from space, blue planet with white clouds and blue ocean, black space background, NASA photography, photorealistic, high detail",
-      "negative": "text, watermark, blurry, cartoon, illustration, low quality",
-      "width": 1024, "height": 1024, "steps": 6
+      "prompt": "photograph of Earth seen from space, blue planet with white swirling storm clouds, deep blue oceans, thin atmospheric glow on the limb, black starfield background, NASA photography, photorealistic, highly detailed, 8k",
+      "negative": "text, watermark, illustration, cartoon, 3d render, painting, flat color, poster style, blurry",
+      "width": 1024, "height": 1024, "steps": 4, "seed": 100003
     },
     {
       "name": "morning-sunlight",
-      "prompt": "warm morning sunlight rays through clouds over calm sea, golden light on water surface, photorealistic landscape photography, peaceful, high detail",
-      "negative": "text, watermark, people, blurry, cartoon, low quality",
-      "width": 1024, "height": 576, "steps": 6
+      "prompt": "warm morning sunlight rays breaking through soft clouds over a calm sea at dawn, golden light reflecting on gentle water, peaceful seascape, professional landscape photography, photorealistic, natural lighting, 8k",
+      "negative": "text, watermark, people, illustration, cartoon, 3d render, painting, flat, blurry",
+      "width": 1280, "height": 720, "steps": 4, "seed": 100004
     }
   ]
 }

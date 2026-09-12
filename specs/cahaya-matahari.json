@@ -13,17 +13,17 @@
   },
   "vo": "vo/voiceover-cahaya-matahari.mp3",
   "scenes": [
-    { "id": "open",       "caption": "Cahaya matahari yang kamu lihat|sekarang,",                              "visual": { "type": "sun-rays" } },
-    { "id": "delay",      "caption": "sebenarnya sudah pergi|delapan menit dua puluh detik yang lalu.",        "visual": { "type": "sun-rays", "tooltip": { "text": "Jarak ke Bumi <cy>149,6 juta km</cy>", "x": 300, "y": 500 } } },
-    { "id": "giant",      "caption": "Matahari itu raksasa:|satu juta tiga ratus ribu bumi",                   "visual": { "type": "scale", "earth_count": "1.300.000" } },
-    { "id": "fit",        "caption": "bisa muat di dalamnya.",                                                 "visual": { "type": "scale", "earth_count": "1.300.000", "fill": true } },
-    { "id": "surface",    "caption": "Suhu permukaannya|lima ribu lima ratus derajat.",                        "visual": { "type": "sun-temp", "temp": "5.500°C" } },
-    { "id": "core",       "caption": "Tapi cahayanya butuh waktu lama|untuk kabur dari inti.",                 "visual": { "type": "core", "glow": false } },
-    { "id": "wander",     "caption": "Empat puluh ribu sampai|seratus tujuh puluh ribu tahun —",               "visual": { "type": "core", "bounce": true } },
-    { "id": "collide",    "caption": "bertabrakan berulang kali|sebelum akhirnya bebas.",                      "visual": { "type": "core", "bounce": true, "collide": true } },
-    { "id": "free",       "caption": "Delapan menit menuju bumi,",                                             "visual": { "type": "journey", "phase": "depart" } },
-    { "id": "arrive",     "caption": "setelah perjalanan puluhan ribu tahun|dari jantung matahari.",           "visual": { "type": "journey", "phase": "arrive" } },
-    { "id": "warm",       "caption": "Jadi setiap kali kamu merasakan|hangatnya pagi,",                        "visual": { "type": "outro", "title": "SINAR PAGI = <cy>SEJARAH</cy>" } },
-    { "id": "history",    "caption": "kamu sedang menyentuh sejarah|yang lebih tua dari peradaban manusia.",   "visual": { "type": "outro", "title": "SINAR PAGI = <cy>SEJARAH</cy>", "line": true } }
+    { "id": "open",       "caption": "Cahaya matahari yang kamu lihat|sekarang,",                              "visual": { "type": "sun-rays", "bg": "sun-closeup" } },
+    { "id": "delay",      "caption": "sebenarnya sudah pergi|delapan menit dua puluh detik yang lalu.",        "visual": { "type": "sun-rays", "bg": "sun-closeup", "tooltip": { "text": "Jarak ke Bumi <cy>149,6 juta km</cy>", "x": 300, "y": 500 } } },
+    { "id": "giant",      "caption": "Matahari itu raksasa:|satu juta tiga ratus ribu bumi",                   "visual": { "type": "scale", "earth_count": "1.300.000", "bg": "sun-core-glow" } },
+    { "id": "fit",        "caption": "bisa muat di dalamnya.",                                                 "visual": { "type": "scale", "earth_count": "1.300.000", "fill": true, "bg": "sun-core-glow" } },
+    { "id": "surface",    "caption": "Suhu permukaannya|lima ribu lima ratus derajat.",                        "visual": { "type": "sun-temp", "temp": "5.500°C", "bg": "sun-closeup" } },
+    { "id": "core",       "caption": "Tapi cahayanya butuh waktu lama|untuk kabur dari inti.",                 "visual": { "type": "core", "glow": false, "bg": "sun-core-glow" } },
+    { "id": "wander",     "caption": "Empat puluh ribu sampai|seratus tujuh puluh ribu tahun —",               "visual": { "type": "core", "bounce": true, "bg": "sun-core-glow" } },
+    { "id": "collide",    "caption": "bertabrakan berulang kali|sebelum akhirnya bebas.",                      "visual": { "type": "core", "bounce": true, "collide": true, "bg": "sun-core-glow" } },
+    { "id": "free",       "caption": "Delapan menit menuju bumi,",                                             "visual": { "type": "journey", "phase": "depart", "bg": "earth-from-space" } },
+    { "id": "arrive",     "caption": "setelah perjalanan puluhan ribu tahun|dari jantung matahari.",           "visual": { "type": "journey", "phase": "arrive", "bg": "earth-from-space" } },
+    { "id": "warm",       "caption": "Jadi setiap kali kamu merasakan|hangatnya pagi,",                        "visual": { "type": "outro", "title": "SINAR PAGI = <cy>SEJARAH</cy>", "bg": "morning-sunlight" } },
+    { "id": "history",    "caption": "kamu sedang menyentuh sejarah|yang lebih tua dari peradaban manusia.",   "visual": { "type": "outro", "title": "SINAR PAGI = <cy>SEJARAH</cy>", "line": true, "bg": "morning-sunlight" } }
   ]
 }
