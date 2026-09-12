@@ -24,6 +24,9 @@ TURBO_NEG = "text, watermark, blurry, low quality, deformed, illustration, carto
 # Flux Schnell via model API (auto-resolve latest version) — cepat & murah
 REPLICATE_MODEL = os.environ.get("REPLICATE_MODEL", "black-forest-labs/flux-schnell")
 
+# backend selector state (diisi di main() dari spec["model"])
+_SPEC_MODEL = None
+
 
 def backend():
     spec_model = _SPEC_MODEL
